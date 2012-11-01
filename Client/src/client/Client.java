@@ -23,6 +23,7 @@ public class Client {
         if (args.length == 0) {
             //System.out.println("use: client hostname");
             //System.exit(-1);
+            
             hostname = "localhost";
         } else {
             hostname = args[0];
