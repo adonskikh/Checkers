@@ -12,51 +12,39 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-
-    public static void work(Socket client) throws IOException  {
-        BufferedReader in = null;
-        PrintWriter out = null;
-        
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        out = new PrintWriter(client.getOutputStream(), true);
-        String input, output;
-
-        System.out.println("Wait for messages");
-        while ((input = in.readLine()) != null) {
-            if (input.equalsIgnoreCase("exit")) {
-                break;
-            }
-            out.println("S ::: " + input);
-            System.out.println(input);
-        }
-        out.close();
-        in.close();
-        client.close();
-    }
-
     public static void main(String[] args) throws IOException {
         System.out.println("Welcome to Server side");
 
-        ServerSocket servers = null;
-        Socket client = null;
+        ServerSocket listener = null;
+        Socket client1 = null;
+        Socket client2 = null;
 
         // create server socket
         try {
-            servers = new ServerSocket(4444);
+            listener = new ServerSocket(4445);
         } catch (IOException e) {
-            System.out.println("Couldn't listen to port 4444");
+            System.out.println("Couldn't listen to port 4445");
             System.exit(-1);
         }
 
-        try {
-            System.out.print("Waiting for a client...");
-            client = servers.accept();
-            System.out.println("Client connected");
-        } catch (IOException e) {
-            System.out.println("Can't accept");
-            System.exit(-1);
+        int i = 0;
+        while (i < 4) {
+            try {
+                System.out.print("Waiting for the first player...");
+                client1 = listener.accept();
+                System.out.println("Player connected");
+                System.out.print("Waiting for the second player...");
+                client2 = listener.accept();
+                System.out.println("Player connected");
+                i++;
+            } catch (IOException e) {
+                System.out.println("Can't accept");
+                System.exit(-1);
+            }
+            Runnable game = new GameThread(client1, client2);
+            Thread thr = new Thread(game);
+            thr.start();
         }
-        Server.work(client);
-        servers.close();
+        listener.close();
     }
 }

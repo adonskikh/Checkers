@@ -32,7 +32,7 @@ public class Client {
 
         System.out.println("Connecting to... " + hostname);
 
-        fromserver = new Socket(hostname, 4444);
+        fromserver = new Socket(hostname, 4445);
         BufferedReader in = new BufferedReader(new InputStreamReader(fromserver.getInputStream()));
         PrintWriter out = new PrintWriter(fromserver.getOutputStream(), true);
         BufferedReader inu = new BufferedReader(new InputStreamReader(System.in));
