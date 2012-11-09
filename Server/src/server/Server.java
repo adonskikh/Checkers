@@ -11,8 +11,11 @@ package server;
 import java.io.*;
 import java.net.*;
 
-public class Server {
-    public static void main(String[] args) throws IOException {
+public class Server
+{
+
+    public static void main(String[] args) throws IOException
+    {
         System.out.println("Welcome to Server side");
 
         ServerSocket listener = null;
@@ -20,16 +23,20 @@ public class Server {
         Socket client2 = null;
 
         // create server socket
-        try {
+        try
+        {
             listener = new ServerSocket(4445);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println("Couldn't listen to port 4445");
             System.exit(-1);
         }
 
         int i = 0;
-        while (i < 4) {
-            try {
+        while (i < 4)
+        {
+            try
+            {
                 System.out.print("Waiting for the first player...");
                 client1 = listener.accept();
                 System.out.println("Player connected");
@@ -37,7 +44,8 @@ public class Server {
                 client2 = listener.accept();
                 System.out.println("Player connected");
                 i++;
-            } catch (IOException e) {
+            } catch (IOException e)
+            {
                 System.out.println("Can't accept");
                 System.exit(-1);
             }

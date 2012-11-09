@@ -8,6 +8,6 @@ package server;
  *
  * @author totzhe
  */
-public class Game {
-    
+public class Game
+{
 }
