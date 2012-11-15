@@ -112,7 +112,7 @@ public class BoardSquare implements IBoardSquare
             throw new SquareIsNotEmptyException();
         }
     }
-    
+    /*
     @Override
     public void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException
     {
@@ -126,7 +126,7 @@ public class BoardSquare implements IBoardSquare
         {
             throw new SquareIsNotEmptyException();
         }
-    }
+    }*/
     
     @Override
     public void RemoveChecker()

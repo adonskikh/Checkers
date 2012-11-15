@@ -17,32 +17,12 @@ public class Board
     private IBoardSquare[][] squares;
     private static int boardSize = 8;
     private int boardWidth;
-    private  int squareWidth;
+    private int squareWidth;
+    private Player player;
 
-    /**
-     * @return the boardWidth
-     */
-    public int getBoardWidth()
+    public Board(int boardWidth, Player player) throws SquareIsNotEmptyException
     {
-        return boardWidth;
-    }
-    private IBoardSquare selectedSquare;
-    
-    public boolean HasSelectedSquare()
-    {
-        return selectedSquare != null;
-    }
-    
-    public boolean HasSelectedChecker()
-    {
-        if(HasSelectedSquare())
-            return !(selectedSquare.isEmpty());
-        else
-            return false;
-    }
-
-    public Board(int boardWidth) throws SquareIsNotEmptyException
-    {
+        this.player = player;
         squares = new IBoardSquare[boardSize][boardSize];
         this.boardWidth = boardWidth;
         squareWidth = boardWidth / boardSize;
@@ -50,7 +30,7 @@ public class Board
         {
             for (int j = 0; j < boardSize; j++)
             {
-                squares[i][j] = new BoardSquare(i, j, squareWidth);
+                squares[i][j] = new BoardSquare(i, j, getSquareWidth());
                 if ((i + j) % 2 == 1)
                 {
                     if (j < 3)
@@ -66,6 +46,41 @@ public class Board
         }
     }
 
+    /**
+     * @return the boardWidth
+     */
+    public int getBoardWidth()
+    {
+        return boardWidth;
+    }
+
+    /**
+     * @return the squareWidth
+     */
+    public int getSquareWidth()
+    {
+        return squareWidth;
+    }
+    private IBoardSquare selectedSquare;
+
+    public boolean HasSelectedSquare()
+    {
+        return selectedSquare != null;
+    }
+
+    public boolean HasSelectedChecker()
+    {
+        if (HasSelectedSquare())
+        {
+            if (!selectedSquare.isEmpty())
+            {
+                return true;
+
+            }
+        }
+        return false;
+    }
+
     public void Draw(Graphics g)
     {
 
@@ -78,62 +93,64 @@ public class Board
         }
     }
 
-    public IBoardSquare FindSquare(int mouse_x, int mouse_y)
+    private IBoardSquare FindSquare(int x, int y)
     {
-        if (mouse_x < boardWidth && mouse_y < boardWidth && mouse_x >= 0 && mouse_y >= 0)
+        if (x < boardSize && y < boardSize && x >= 0 && y >= 0)
         {
-            return squares[mouse_x / squareWidth][mouse_y / squareWidth];
+            return squares[x][y];
         }
         else
         {
             return null;
         }
     }
-    
-    public void MoveChecker(int x, int y, int x_new, int y_new) throws SquareIsNotEmptyException
+
+    private void MoveChecker(int x, int y, int x_new, int y_new) throws SquareIsNotEmptyException
     {
-        if(!squares[x][y].isEmpty())
-        {
-            squares[x_new][y_new].AddChecker(squares[x][y].getChecker());
-            squares[x][y].RemoveChecker();
-            CancelSquareSelection();
-        }
+        //TODO: спросить разрешения у сервера
+        squares[x_new][y_new].AddChecker(squares[x][y].getChecker());
+        squares[x][y].RemoveChecker();
+        CancelSquareSelection();
+
     }
 
-    public void SelectSquare(int mouse_x, int mouse_y)
+    private void SelectSquare(int x, int y)
     {
         CancelSquareSelection();
-        if (mouse_x < boardWidth && mouse_y < boardWidth && mouse_x >= 0 && mouse_y >= 0)
+        if (x < boardSize && y < boardSize && x >= 0 && y >= 0)
         {
-            int i = mouse_x / squareWidth;
-            int j = mouse_y / squareWidth;
-            selectedSquare = squares[i][j] = squares[i][j].Select();
+            selectedSquare = squares[x][y] = squares[x][y].Select();
         }
     }
 
-    public void CancelSquareSelection()
+    private void CancelSquareSelection()
     {
         if (HasSelectedSquare())
         {
-            int i = selectedSquare.getX();
-            int j = selectedSquare.getY();
-            squares[i][j] = squares[i][j].CancelSelection();
+            int x = selectedSquare.getX();
+            int y = selectedSquare.getY();
+            squares[x][y] = squares[x][y].CancelSelection();
             selectedSquare = null;
         }
     }
 
-    public void OnClick(int mouse_x, int mouse_y)
+    public void ClickAction(int x, int y)
     {
         if (HasSelectedChecker())
         {
-            int i = mouse_x / squareWidth;
-            int j = mouse_y / squareWidth;
-            if (i < boardSize && j < boardSize && i >= 0 && j >= 0 && (i != selectedSquare.getX() || j != selectedSquare.getY()))
+            if (x < boardSize && y < boardSize && x >= 0 && y >= 0 && (x != selectedSquare.getX() || y != selectedSquare.getY()))
             {
                 try
                 {
-                    //squares[selectedSquare.getX()][selectedSquare.getY()].RemoveChecker();
-                    MoveChecker(selectedSquare.getX(), selectedSquare.getY(), mouse_x / squareWidth, mouse_y / squareWidth);
+                    if (squares[x][y].isEmpty() && selectedSquare.getChecker().getColor() == player.getColor() && selectedSquare.getColor() == squares[x][y].getColor())
+                    {
+                        //squares[selectedSquare.getX()][selectedSquare.getY()].RemoveChecker();
+                        MoveChecker(selectedSquare.getX(), selectedSquare.getY(), x, y);
+                    }
+                    else
+                    {
+                        SelectSquare(x, y);
+                    }
                 }
                 catch (SquareIsNotEmptyException e)
                 {
@@ -141,18 +158,18 @@ public class Board
                 }
             }
             else
+            {
                 CancelSquareSelection();
+            }
         }
         else
         {
-            SelectSquare(mouse_x, mouse_y);
+            SelectSquare(x, y);
         }
 
     }
-    
     /*public String toString()
-    {
+     {
         
-    }*/
-            
+     }*/
 }

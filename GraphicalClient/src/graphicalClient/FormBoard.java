@@ -6,6 +6,7 @@ package graphicalClient;
 
 import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import java.awt.*;
+import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,9 +16,7 @@ import javax.swing.JOptionPane;
 public class FormBoard extends javax.swing.JFrame
 {
 
-    private Board board;
-    
-    private boolean moving;
+    private Game game;
     
     private static int border = 50;  
     
@@ -28,7 +27,7 @@ public class FormBoard extends javax.swing.JFrame
     {
         try
         {
-            board = new Board(400);
+            game = new Game();
         } catch (SquareIsNotEmptyException e)
         {
             System.exit(-1);
@@ -64,6 +63,13 @@ public class FormBoard extends javax.swing.JFrame
         });
 
         jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,7 +95,7 @@ public class FormBoard extends javax.swing.JFrame
     {//GEN-HEADEREND:event_onMouseClick
         //JOptionPane.showMessageDialog(null, evt.getX());
         //invalidate();
-        board.OnClick(evt.getX() - border, evt.getY() - border);
+        game.ClickAction(evt.getX() - border, evt.getY() - border);
         repaint();
     }//GEN-LAST:event_onMouseClick
 
@@ -98,13 +104,27 @@ public class FormBoard extends javax.swing.JFrame
         // TODO add your handling code here:
     }//GEN-LAST:event_onMouseDown
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
+    {//GEN-HEADEREND:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try
+        {
+            ServerConnection conn = new ServerConnection();
+            conn.Connect("localhost");
+            conn.SendMessage("hey there");
+        }
+        catch (IOException e)
+        {
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     @Override
     public void paint(Graphics g)
     {
-        Graphics gr = g.create(border, border, board.getBoardWidth(), board.getBoardWidth());
         /*g.setColor(Color.yellow);
          g.fillRect(10, 5, 100, 100);*/
-        board.Draw(gr);
+        game.Draw(g, border);
     }
 
     /**

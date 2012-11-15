@@ -34,11 +34,11 @@ public class SelectedBoardSquare implements IBoardSquare
         g.drawRect(getX()*getWidth(), getY()*getWidth(), getWidth() - 1, getWidth() - 1);
     }
 
-    @Override
+    /*@Override
     public void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException
     {
         this.square.MoveCheckerTo(square);
-    }
+    }*/
 
     @Override
     public void RemoveChecker()

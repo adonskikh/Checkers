@@ -18,7 +18,7 @@ public interface IBoardSquare
 
     void Draw(Graphics g);
 
-    void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException;
+    //void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException;
 
     void RemoveChecker();
 
