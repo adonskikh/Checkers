@@ -14,13 +14,18 @@ import java.net.*;
 public class Server
 {
 
+    /**
+     *
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException
     {
         System.out.println("Welcome to Server side");
 
         ServerSocket listener = null;
-        Socket client1 = null;
-        Socket client2 = null;
+        Socket clientSocket1 = null;
+        Socket clientSocket2 = null;
 
         // create server socket
         try
@@ -38,10 +43,10 @@ public class Server
             try
             {
                 System.out.print("Waiting for the first player...");
-                client1 = listener.accept();
+                clientSocket1 = listener.accept();
                 System.out.println("Player connected");
                 System.out.print("Waiting for the second player...");
-                client2 = listener.accept();
+                clientSocket2 = listener.accept();
                 System.out.println("Player connected");
                 i++;
             } catch (IOException e)
@@ -49,7 +54,7 @@ public class Server
                 System.out.println("Can't accept");
                 System.exit(-1);
             }
-            Runnable game = new GameThread(client1, client2);
+            Runnable game = new GameThread(clientSocket1, clientSocket2);
             Thread thr = new Thread(game);
             thr.start();
         }

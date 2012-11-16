@@ -4,6 +4,8 @@
  */
 package graphicalClient;
 
+import graphicalClient.BoardElements.SquareIsNotEmptyException;
+import graphicalClient.BoardElements.Board;
 import java.awt.Color;
 import java.awt.Graphics;
 
