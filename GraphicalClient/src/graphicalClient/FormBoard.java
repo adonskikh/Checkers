@@ -4,8 +4,12 @@
  */
 package graphicalClient;
 
+
 import graphicalClient.Server.ServerConnection;
 import graphicalClient.BoardElements.SquareIsNotEmptyException;
+
+//import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
+
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -26,7 +30,6 @@ public class FormBoard extends javax.swing.JFrame
     /**
      * Creates new form FormBoard
      */
-    @SuppressWarnings("empty-statement")
     public FormBoard()
     {
         try
@@ -117,7 +120,13 @@ public class FormBoard extends javax.swing.JFrame
         // TODO add your handling code here:
         try
         {
+
             conn.SendMoveRequest(1, 2, 5, 6);
+
+            ServerConnection conn = new ServerConnection();
+            conn.Connect("localhost");
+            //conn.SendMessage("hey there");
+
         }
         catch (IOException e)
         {
