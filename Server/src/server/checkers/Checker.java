@@ -63,35 +63,7 @@ public abstract  class Checker implements IChecker
     }
     
     @Override
-    public boolean CheckMotion(Point targetPointPoint)
-    {
-        /*if (this.getColor() == Color.BLACK && y >= this.getY())
-        {
-            return false;
-        }
-        
-        if (this.getColor() == Color.WHITE && y <= this.getY())
-        {
-            return false;
-        }
-        int dX = Math.abs(x - this.x), dY = Math.abs(y - this.y);
-        
-        if (board[x][y] == null)
-        {
-            if (dX == 2 && dY == 2 && 
-                    board[(x + this.x)/2][(y + this.y)/2] != null && 
-                    board[(x + this.x)/2][(y + this.y)/2].getColor() != this.color) 
-            {
-                return true;
-            }
-            if (dX == 1 && dY == 1) 
-            {
-                return true;
-            }
-        }
-        return false;*/
-        return false;
-    }
+    public abstract boolean CheckMotion(Point targetPointPoint);
     
     @Override
     public Point KillEnemysCheckers(Point point)
@@ -101,52 +73,7 @@ public abstract  class Checker implements IChecker
     }
     
     @Override
-    public boolean CanKillSmb()
-    {
-        /*if (this.getColor() == Color.BLACK)
-        {
-            if(startY - 2 > -1)
-            {
-                if(startX - 1 > -1 && board[startX - 1][startY - 1] != null && board[startX - 1][startY - 1].getColor() != this.getColor())
-                {
-                    if(startX - 2 > -1 && board[startX - 2][startY - 2] == null)
-                    {
-                        return true;
-                    }  
-                }
-                if(startX + 1 < board.length && board[startX + 1][startY - 1] != null && board[startX + 1][startY - 1].getColor() != this.getColor())
-                {
-                    if(startX + 2 < board.length && board[startX + 2][startY - 2] == null)
-                    {
-                        return true;
-                    }  
-                }                
-            }
-            return false;           
-        }
-        else 
-        {
-            if(startY + 2 < board.length)
-            {
-                if(startX - 1 > -1 && board[startX - 1][startY + 1] != null && board[startX - 1][startY + 1].getColor() != this.getColor())
-                {
-                    if(startX - 2 > -1 && board[startX - 2][startY + 2] == null)
-                    {
-                        return true;
-                    }  
-                }
-                if(startX + 1 < board.length && board[startX + 1][startY + 1] != null && board[startX + 1][startY + 1].getColor() != this.getColor())
-                {
-                    if(startX + 2 < board.length && board[startX + 2][startY + 2] == null)
-                    {
-                        return true;
-                    }  
-                }                
-            }
-            return false; 
-            }*/
-        return false;
-    }
+    public abstract boolean CanKillSmb();
   
     /**
      * Может ли текущая шашка данным ходом убить вражескую, если может, то убивает

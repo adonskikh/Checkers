@@ -90,6 +90,11 @@ public class Player
     {
         return score;
     }
+    
+    public void IncScore()
+    {
+        score++;
+    }
 
     /**
      * @param score the score to set
