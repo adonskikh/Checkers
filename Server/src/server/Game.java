@@ -17,11 +17,13 @@ public class Game
 {
     private IChecker[][] board;
     private int boardSize = 8;
+    private int countCheckers = 12;
     private Player players[];
     private Player currentPlayer;
     
     public Game(Player player1, Player player2)
     {
+        
         board = new IChecker[boardSize][boardSize];
         players = new Player[2];
         players[0] = player1; 
@@ -33,14 +35,8 @@ public class Game
         player1.SetCheckersInStartPosition();
         player2.SetCheckersInStartPosition();
         
-        if(player1.getColor() == Color.WHITE)
-        {
-            currentPlayer = player1;
-        }
-        else
-        {
-            currentPlayer = player2;
-        }
+        //Первый ход в игре принадлежит белым
+        currentPlayer = player1.getColor() == Color.WHITE ? player1 : player2;
     }
     
     public Player getCurrentPlayer()
@@ -48,23 +44,28 @@ public class Game
         return currentPlayer;
     }
     
-    private Point killedChecker;
-    private Point startPoint;
-    private Point finishPoint;
-    private boolean endTurn;
-    private boolean turnToQueen;
-    
     public void ActionOnRecieveMessage(Point targetPoint)
     {
-        endTurn = false;
+        Point killedChecker;
+        Point startPoint;
+        Point finishPoint;
+        boolean endTurn = false;
+        boolean turnToQueen = false;
         startPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
         finishPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
+        
+        if(board[targetPoint.x][targetPoint.y] != null)
+        {
+            currentPlayer.SendMoveCommand(new Point(-1, -1), startPoint, finishPoint, endTurn, turnToQueen);
+            return;
+        }
         //Если может убить кого-нибудь данным ходом
         if(currentPlayer.getCurrentChecker().IfThisOneKillSmb(targetPoint))
         {
             killedChecker = currentPlayer.getCurrentChecker().KillEnemysCheckers(targetPoint);
             currentPlayer.getCurrentChecker().ChangeCoords(targetPoint);
             endTurn = !currentPlayer.getCurrentChecker().CanKillSmb() ? true : false;
+            currentPlayer.IncScore();
         }
         //Если данным ходом, никого не бьет
         else
@@ -113,10 +114,17 @@ public class Game
             turnToQueen = true;
             board[currentPlayer.getCurrentChecker().getX()][currentPlayer.getCurrentChecker().getY()] = currentPlayer.getCurrentChecker().Crown();
         }
+        
         for(int i = 0; i < players.length; i++)
             players[i].SendMoveCommand(startPoint, finishPoint, killedChecker, turnToQueen, endTurn);
         
         if(endTurn) currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
+    }
+    
+    //Если какой-либо игрок убил все шашки другого игрока - конец игры
+    public int CheckEndGame()
+    {
+        return players[0].getScore() == countCheckers ? 0 : players[1].getScore() == countCheckers ? 1 : -1;
     }
     
     public void MoveChecker(Point currentSquare, Point newSquare)
