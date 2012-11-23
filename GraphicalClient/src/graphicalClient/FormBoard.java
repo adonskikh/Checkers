@@ -4,7 +4,8 @@
  */
 package graphicalClient;
 
-import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
+import graphicalClient.Server.ServerConnection;
+import graphicalClient.BoardElements.SquareIsNotEmptyException;
 import java.awt.*;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -18,11 +19,14 @@ public class FormBoard extends javax.swing.JFrame
 
     private Game game;
     
-    private static int border = 50;  
+    private static int border = 50; 
+    
+            ServerConnection conn;
     
     /**
      * Creates new form FormBoard
      */
+    @SuppressWarnings("empty-statement")
     public FormBoard()
     {
         try
@@ -34,6 +38,10 @@ public class FormBoard extends javax.swing.JFrame
         }
         initComponents();
         this.invalidate();
+            System.out.println("111111111");
+        conn = new ServerConnection();
+            try{conn.Connect("localhost");}catch(IOException e){JOptionPane.showMessageDialog(null, "err");};
+            System.out.println("22222222222");
     }
 
     /**
@@ -109,9 +117,7 @@ public class FormBoard extends javax.swing.JFrame
         // TODO add your handling code here:
         try
         {
-            ServerConnection conn = new ServerConnection();
-            conn.Connect("localhost");
-            conn.SendMessage("hey there");
+            conn.SendMoveRequest(1, 2, 5, 6);
         }
         catch (IOException e)
         {
