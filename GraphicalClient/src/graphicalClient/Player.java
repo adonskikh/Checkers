@@ -12,10 +12,13 @@ import java.awt.*;
 public class Player
 {
     private Color color;
+    private boolean active;
     
-    public Player(Color color)
+    public Player(Color color, String name, String opponentName)
     {
         this.color = color;
+        
+        active = (getColor() == Color.WHITE);
     }
 
     /**
@@ -24,5 +27,18 @@ public class Player
     public Color getColor()
     {
         return color;
+    }
+
+    /**
+     * @return the active
+     */
+    public boolean isActive()
+    {
+        return active;
+    }
+    
+    public void ChangeTurn()
+    {
+        active = !active;
     }
 }
