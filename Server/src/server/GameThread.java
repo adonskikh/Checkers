@@ -4,8 +4,10 @@
  */
 package server;
 
+import java.awt.Color;
 import java.io.*;
 import java.net.*;
+import server.players.Player;
 /*import java.util.logging.Level;
 import java.util.logging.Logger;*/
 
@@ -16,13 +18,13 @@ import java.util.logging.Logger;*/
 public class GameThread implements Runnable
 {
 
-    private Socket player1;
-    private Socket player2;
+    private Socket playerSocket1;
+    private Socket playerSocket2;
 
     public GameThread(Socket player1, Socket player2)
     {
-        this.player1 = player1;
-        this.player2 = player2;
+        this.playerSocket1 = player1;
+        this.playerSocket2 = player2;
     }
 
     @Override
@@ -35,11 +37,11 @@ public class GameThread implements Runnable
 
         try
         {
-            /*out1 = new PrintWriter(new BufferedOutputStream(player1.getOutputStream()), true);
-             out2 = new PrintWriter(new BufferedOutputStream(player2.getOutputStream()), true);*/
+            /*out1 = new PrintWriter(new BufferedOutputStream(playerSocket1.getOutputStream()), true);
+             out2 = new PrintWriter(new BufferedOutputStream(playerSocket2.getOutputStream()), true);*/
             System.out.println("33333333333333333");
-            out1 = new ObjectOutputStream(player1.getOutputStream());
-            out2 = new ObjectOutputStream(player2.getOutputStream());
+            out1 = new ObjectOutputStream(playerSocket1.getOutputStream());
+            out2 = new ObjectOutputStream(playerSocket2.getOutputStream());
             System.out.println("44444444444444444");
         }
         catch (IOException e)
@@ -50,11 +52,11 @@ public class GameThread implements Runnable
 
         try
         {
-            /*in1 = new BufferedReader(new InputStreamReader(player1.getInputStream()));
-             in2 = new BufferedReader(new InputStreamReader(player2.getInputStream()));*/
+            /*in1 = new BufferedReader(new InputStreamReader(playerSocket1.getInputStream()));
+             in2 = new BufferedReader(new InputStreamReader(playerSocket2.getInputStream()));*/
             System.out.println("11111111111111111");
-            in1 = new ObjectInputStream(player1.getInputStream());
-            in2 = new ObjectInputStream(player2.getInputStream());
+            in1 = new ObjectInputStream(playerSocket1.getInputStream());
+            in2 = new ObjectInputStream(playerSocket2.getInputStream());
             System.out.println("2222222222222222");
         }
         catch (IOException e)
@@ -63,62 +65,14 @@ public class GameThread implements Runnable
             System.exit(-1);
         }
         
+        int id1 = 1;//TODO: Получить их от клиента !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        int id2 = 2;
         
-        String input, output;
-        MoveRequest request;
-        String s;
+        Game game = new Game(new Player(id1, Color.WHITE, in1, out1), new Player(id2, Color.BLACK, in2, out2));
 
-        System.out.println("Wait for messages");
-        while (true)
-        {
-            try
-            {
-                try
-                {
-                    if ((/*request*/s = /*(MoveRequest)*/(String)in1.readObject()) != null)
-                    {
-                        /*if (input.equalsIgnoreCase("exit"))
-                        {
-                            break;
-                        }*/
-                        /*out1.println("Player1: " + input);
-                        out2.println("Player1: " + input);*/
-                        System.out.println(/*request.getX()+" "+request.getY()*/s);
-                    }
-                }
-                catch (ClassNotFoundException ex)
-                {
-                        System.out.println("ClassNotFoundException");
-                }
-            }
-            catch (IOException e)
-            {
-                System.out.println("Stream 1 reading error");
-                //out2.println("Player1 disconnected.");
-                //System.exit(-1);
-                break;
-            }
-            try
-            {
-                if ((input = in2.readLine()) != null)
-                {
-                    if (input.equalsIgnoreCase("exit"))
-                    {
-                        break;
-                    }
-                    //out1.println("Player2: " + input);
-                    //out2.println("Player2: " + input);
-                    System.out.println(input);
-                }
-            }
-            catch (IOException e)
-            {
-                System.out.println("Stream 2 reading error");
-                //out1.println("Player2 disconnected.");
-                //System.exit(-1);
-                break;
-            }
-        }
+        game.Start();
+
+        System.out.println("Game over");
         try
         {
             out1.close();
@@ -141,8 +95,8 @@ public class GameThread implements Runnable
         }
         try
         {
-            player1.close();
-            player2.close();
+            playerSocket1.close();
+            playerSocket2.close();
         }
         catch (IOException e)
         {

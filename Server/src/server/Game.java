@@ -5,6 +5,7 @@
 package server;
 //import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import java.awt.*;
+import java.io.IOException;
 import server.checkers.IChecker;
 import server.players.Player;
 
@@ -25,6 +26,13 @@ public class Game
         players = new Player[2];
         players[0] = player1; 
         players[1] = player2;
+        
+        board = new IChecker[boardSize][boardSize];
+        player1.setBoard(board);
+        player2.setBoard(board);
+        player1.SetCheckersInStartPosition();
+        player2.SetCheckersInStartPosition();
+        
         if(player1.getColor() == Color.WHITE)
         {
             currentPlayer = player1;
@@ -105,9 +113,47 @@ public class Game
             turnToQueen = true;
             board[currentPlayer.getCurrentChecker().getX()][currentPlayer.getCurrentChecker().getY()] = currentPlayer.getCurrentChecker().Crown();
         }
-        
-        currentPlayer.SendMoveCommand(killedChecker, startPoint, finishPoint,endTurn, turnToQueen);
+        for(int i = 0; i < players.length; i++)
+            players[i].SendMoveCommand(startPoint, finishPoint, killedChecker, turnToQueen, endTurn);
         
         if(endTurn) currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
+    }
+    
+    public void MoveChecker(Point currentSquare, Point newSquare)
+    {
+        board[currentSquare.x][currentSquare.y].setX(newSquare.x);
+        board[currentSquare.x][currentSquare.y].setY(newSquare.y);
+        board[newSquare.x][newSquare.y] = board[currentSquare.x][currentSquare.y];
+        board[currentSquare.x][currentSquare.y] = null;
+    }
+    
+    public void Start()
+    {
+        //TODO: Вероятно, здесь будет всякая подготовительная ерунда вроде выбора из БД и отправки имен игроков друг другу
+        players[0].SendNewGameCommand(0, "white", "black");
+        players[1].SendNewGameCommand(1, "black", "white");
+        
+        
+        while (players[0].isAlive() && players[1].isAlive())
+        {
+            System.out.println("New turn");
+            Point targetPoint = currentPlayer.ReadMoveRequest();
+            System.out.println(currentPlayer.getColor().toString());
+            if (targetPoint != null)
+            {
+                System.out.println("Moving");
+                //ActionOnRecieveMessage(targetPoint); //раскомментировать потом
+
+
+                //заглушка  
+                for(int i = 0; i < players.length; i++)
+                    players[i].SendMoveCommand(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint, new Point(-1, -1), false, true);
+                MoveChecker(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint);
+                currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
+                //if(currentPlayer.getColor() == Color.WHITE && players[0].getColor() == Color.WHITE)
+            }
+        }
+
+        //TODO: Отправить победителю и проигравшему соответствующие сообщения
     }
 }
