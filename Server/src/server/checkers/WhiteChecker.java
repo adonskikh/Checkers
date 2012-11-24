@@ -26,7 +26,7 @@ public final class WhiteChecker extends Checker
             return false;
         }
         
-        int dX = Math.abs(targetPoint.x - x), dY = y - targetPoint.y;
+        int dX = Math.abs(targetPoint.x - x), dY = targetPoint.y - y;
         
         if (board[targetPoint.x][targetPoint.y] == null)
         {
@@ -50,16 +50,16 @@ public final class WhiteChecker extends Checker
     {
         if (y + 2 < board.length)
         {
-            if (x - 1 > -1 && board[x - 1][y + 1] != null && board[x - 1][y + 1].getColor() == Color.BLACK)
+            if (x - 2 > -1 && board[x - 1][y + 1] != null && board[x - 1][y + 1].getColor() == Color.BLACK)
             {
-                if (x - 2 > -1 && board[x - 2][y + 2] == null)
+                if (board[x - 2][y + 2] == null)
                 {
                     return true;
                 }
             }
-            if (x + 1 < board.length && board[x + 1][y + 1] != null && board[x + 1][y + 1].getColor() == Color.BLACK)
+            if (x + 2 < board.length && board[x + 1][y + 1] != null && board[x + 1][y + 1].getColor() == Color.BLACK)
             {
-                if (x + 2 < board.length && board[x + 2][y + 2] == null)
+                if (board[x + 2][y + 2] == null)
                 {
                     return true;
                 }

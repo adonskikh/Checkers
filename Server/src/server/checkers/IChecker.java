@@ -31,7 +31,7 @@ public interface IChecker
     
     public boolean IfThisOneKillSmb(Point targetPoint); 
     
-    public void ChangeCoords(Point targetPoint);
+    public Point ChangeCoords(Point targetPoint);
     
     public boolean IfCanTurnToQueen();
 }

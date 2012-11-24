@@ -26,7 +26,7 @@ public final class BlackChecker extends Checker
             return false;
         }
         
-        int dX = Math.abs(targetPoint.x - x), dY = targetPoint.y - y;
+        int dX = Math.abs(targetPoint.x - x), dY = y - targetPoint.y;
         
         if (board[targetPoint.x][targetPoint.y] == null)
         {

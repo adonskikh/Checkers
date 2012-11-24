@@ -221,10 +221,12 @@ public final class CrownedChecker implements IChecker
     }
     
     @Override
-    public void ChangeCoords(Point targetPoint)
+    public Point ChangeCoords(Point targetPoint)
     {
         setX(targetPoint.x);
         setY(targetPoint.y);
+        
+        return new Point(getX(), getY());
     }
     
     @Override
