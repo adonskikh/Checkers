@@ -4,6 +4,7 @@
  */
 package graphicalClient.BoardElements;
 
+import graphicalClient.Drawer;
 import java.awt.*;
 
 /**
@@ -18,8 +19,6 @@ public class CrownedChecker implements IChecker
     }
     
     private IChecker checker;
-    
-    private static int board = 10;
     
     @Override
     public Color getColor()
@@ -56,22 +55,11 @@ public class CrownedChecker implements IChecker
     {
         checker.setY(y);
     }
-
-    /**
-     * @return the width
-     */
-    @Override
-    public int getWidth()
-    {
-        return checker.getWidth();
-    }
     
     @Override
-    public void Draw(Graphics g)
+    public void Draw()
     {
-        checker.Draw(g);
-        g.setColor(Color.YELLOW);
-        g.fillOval(getX() + board, getY() + board, getWidth() - 2 * board, getWidth() - 2 * board);
+        Drawer.DrawCrownedChecker(getX(), getY(), getColor());
     }
     
     @Override

@@ -7,7 +7,6 @@ package graphicalClient.BoardElements;
 import graphicalClient.Player;
 import graphicalClient.Server.*;
 import java.awt.*;
-import java.io.IOException;
 import javax.swing.JOptionPane;
 
 /**
@@ -16,28 +15,31 @@ import javax.swing.JOptionPane;
  */
 public class Board
 {
-
     private IBoardSquare[][] squares;
     private static int boardSize = 8;
-    private int boardWidth;
-    private int squareWidth;
     private Player player;
     private ServerConnection server;
+    
+    /**
+     * @return the boardSize
+     */
+    public static int getBoardSize()
+    {
+        return boardSize;
+    }
 
-    public Board(int boardWidth, Player player, ServerConnection server) throws SquareIsNotEmptyException
+    public Board(Player player, ServerConnection server) throws SquareIsNotEmptyException
     { 
         this.server = server;
         this.player = player;
         //JOptionPane.showMessageDialog(null, "Player: " + player.getColor().toString());
         
         squares = new IBoardSquare[boardSize][boardSize];
-        this.boardWidth = boardWidth;
-        squareWidth = boardWidth / boardSize;
         for (int i = 0; i < boardSize; i++)
         {
             for (int j = 0; j < boardSize; j++)
             {
-                squares[i][j] = new BoardSquare(i, j, getSquareWidth());
+                squares[i][j] = new BoardSquare(i, j);
                 if ((i + j) % 2 == 1)
                 {
                     if (j < 3)
@@ -52,22 +54,7 @@ public class Board
             }
         }
     }
-
-    /**
-     * @return the boardWidth
-     */
-    public int getBoardWidth()
-    {
-        return boardWidth;
-    }
-
-    /**
-     * @return the squareWidth
-     */
-    public int getSquareWidth()
-    {
-        return squareWidth;
-    }
+    
     private IBoardSquare selectedSquare;
 
     public boolean HasSelectedSquare()
@@ -88,21 +75,21 @@ public class Board
         return false;
     }
 
-    public void Draw(Graphics g)
+    public void Draw()
     {
 
-        for (int i = 0; i < boardSize; i++)
+        for (int i = 0; i < getBoardSize(); i++)
         {
-            for (int j = 0; j < boardSize; j++)
+            for (int j = 0; j < getBoardSize(); j++)
             {
-                squares[i][j].Draw(g);
+                squares[i][j].Draw();
             }
         }
     }
 
-    private IBoardSquare FindSquare(int x, int y)
+    /*private IBoardSquare FindSquare(int x, int y)
     {
-        if (x < boardSize && y < boardSize && x >= 0 && y >= 0)
+        if (x < getBoardSize() && y < getBoardSize() && x >= 0 && y >= 0)
         {
             return squares[x][y];
         }
@@ -110,7 +97,7 @@ public class Board
         {
             return null;
         }
-    }
+    }*/
 
     private void MoveChecker(int x, int y, int x_new, int y_new) throws SquareIsNotEmptyException
     {
@@ -152,7 +139,7 @@ public class Board
     private void SelectSquare(int x, int y)
     {
         CancelSquareSelection();
-        if (x < boardSize && y < boardSize && x >= 0 && y >= 0)
+        if (x < getBoardSize() && y < getBoardSize() && x >= 0 && y >= 0)
         {
             selectedSquare = squares[x][y] = squares[x][y].Select();
         }
@@ -173,7 +160,7 @@ public class Board
     {
         if (HasSelectedChecker())
         {
-            if (x < boardSize && y < boardSize && x >= 0 && y >= 0 && (x != selectedSquare.getX() || y != selectedSquare.getY()))
+            if (x < getBoardSize() && y < getBoardSize() && x >= 0 && y >= 0 && (x != selectedSquare.getX() || y != selectedSquare.getY()))
             {
                 try
                 {
@@ -202,9 +189,5 @@ public class Board
             SelectSquare(x, y);
         }
 
-    }
-    /*public String toString()
-     {
-        
-     }*/  
+    } 
 }

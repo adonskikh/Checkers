@@ -14,12 +14,13 @@ import java.awt.*;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 import graphicalClient.BoardElements.*;
+import java.util.*;
 
 /**
  *
  * @author totzhe
  */
-public class FormBoard extends javax.swing.JFrame
+public class FormBoard extends javax.swing.JFrame implements Observer
 {
 
     private Game game;
@@ -34,6 +35,7 @@ public class FormBoard extends javax.swing.JFrame
         try
         {
             game = new Game();
+            game.addObserver(this);
         } catch (SquareIsNotEmptyException e)
         {
             System.exit(-1);
@@ -102,7 +104,7 @@ public class FormBoard extends javax.swing.JFrame
         //JOptionPane.showMessageDialog(null, evt.getX());
         //invalidate();
         game.ClickAction(evt.getX() - border, evt.getY() - border);
-        repaint();
+        //repaint();
     }//GEN-LAST:event_onMouseClick
 
     private void onMouseDown(java.awt.event.MouseEvent evt)//GEN-FIRST:event_onMouseDown
@@ -172,4 +174,10 @@ public class FormBoard extends javax.swing.JFrame
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
+
+    public void update(Observable subject, Object o)
+    {
+        //JOptionPane.showMessageDialog(null, "Notified");
+        repaint();
+    }
 }

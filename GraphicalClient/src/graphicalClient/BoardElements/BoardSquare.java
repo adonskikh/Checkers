@@ -4,16 +4,17 @@
  */
 package graphicalClient.BoardElements;
 
+import graphicalClient.Drawer;
 import java.awt.*;
 
 /**
  *
  * @author totzhe
  */
-public class BoardSquare implements IBoardSquare
+public class BoardSquare extends BoardElement implements IBoardSquare
 {
 
-    public BoardSquare(int x, int y, int width)
+    public BoardSquare(int x, int y)
     {
         this.x = x;
         this.y = y;
@@ -24,50 +25,6 @@ public class BoardSquare implements IBoardSquare
         {
             color = Color.WHITE;
         }
-        this.width = width;
-    }
-    private int width;
-
-    /**
-     * @return the width
-     */
-    @Override
-    public int getWidth()
-    {
-        return width;
-    }
-    
-    private Color color;
-
-    /**
-     * @return the color
-     */
-    @Override
-    public Color getColor()
-    {
-        return color;
-    }
-    
-    private int x;
-    
-    private int y;
-
-    /**
-     * @return the x
-     */
-    @Override
-    public int getX()
-    {
-        return x;
-    }
-
-    /**
-     * @return the y
-     */
-    @Override
-    public int getY()
-    {
-        return y;
     }
     
     private IChecker checker;
@@ -88,13 +45,12 @@ public class BoardSquare implements IBoardSquare
     }
     
     @Override
-    public void Draw(Graphics g)
+    public void Draw()
     {
-        g.setColor(color);
-        g.fillRect(x * width, y *width, width, width);
+        Drawer.DrawSquare(x, y, color);
         if(!isEmpty())
         {
-            getChecker().Draw(g);
+            getChecker().Draw();
         }
     }
     
@@ -146,6 +102,11 @@ public class BoardSquare implements IBoardSquare
         return new SelectedBoardSquare(this);
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public IBoardSquare CancelSelection()
     {
         return this;

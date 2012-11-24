@@ -9,14 +9,14 @@ import java.awt.Graphics;
 
 /**
  *
- * @author TotZhe
+ * @author totzhe
  */
 public interface IBoardSquare
 {
 
     void AddChecker(IChecker checker) throws SquareIsNotEmptyException;
 
-    void Draw(Graphics g);
+    void Draw();
 
     //void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException;
 
@@ -31,15 +31,7 @@ public interface IBoardSquare
      * @return the color
      */
     Color getColor();
-
-    /**
-     * @return the width
-     */
-    int getWidth();
-
-    /**
-     * @return the x
-     */
+    
     int getX();
 
     /**

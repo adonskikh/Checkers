@@ -155,7 +155,7 @@ public class Game
 
                 //заглушка  
                 for(int i = 0; i < players.length; i++)
-                    players[i].SendMoveCommand(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint, new Point(-1, -1), false, true);
+                    players[i].SendMoveCommand(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint, new Point(-1, -1), true, true);
                 MoveChecker(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint);
                 currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
                 //if(currentPlayer.getColor() == Color.WHITE && players[0].getColor() == Color.WHITE)

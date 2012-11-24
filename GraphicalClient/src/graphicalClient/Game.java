@@ -6,22 +6,20 @@ package graphicalClient;
 
 import graphicalClient.BoardElements.*;
 import graphicalClient.Server.*;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.io.*;
+import java.util.*;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author totzhe
  */
-public class Game implements Runnable
+public class Game extends Observable implements Runnable
 {
     private Player player;
     
     private Board board;
-    
-    private static int boardWidth = 400;
     
     private ServerConnection server;
     
@@ -37,12 +35,12 @@ public class Game implements Runnable
             JOptionPane.showMessageDialog(null, "Connection error: " + e.getMessage());
         };
         NewGameCommand command = server.ReadNewGameCommand();
-        player = new Player(command.getColor(), command.getName(), command.getOpponentName());//TODO: получение цвета от сервера (0 - белый, 1 - черный(красный))
+        player = new Player(command.getColor(), command.getName(), command.getOpponentName());
 
-        board = new Board(boardWidth, player, server);
+        board = new Board(player, server);
         
-        Thread thr = new Thread(this);
-        thr.start();
+        Thread reader = new Thread(this);
+        reader.start();
     }
 
     @Override
@@ -58,6 +56,9 @@ public class Game implements Runnable
                     //JOptionPane.showMessageDialog(null, cmd.toString());
 
                     board.ExecuteMoveCommand(cmd);
+                    setChanged();
+                    notifyObservers();
+                    clearChanged();
                 }
             }
             catch (SquareIsNotEmptyException e)
@@ -68,18 +69,23 @@ public class Game implements Runnable
 
     public void ClickAction(int mouse_x, int mouse_y)
     {
-        if(player.isActive())
+        if (player.isActive())
+        {
             board.ClickAction(ConvertMouseCoordToBoardCoord(mouse_x), ConvertMouseCoordToBoardCoord(mouse_y));
+            setChanged();
+            notifyObservers();
+            clearChanged();
+        }
     }
     
     public int ConvertMouseCoordToBoardCoord(int mouse_coord)
     {
-        return mouse_coord / board.getSquareWidth();
+        return mouse_coord / Drawer.getSquareWidth();
     }
     
     public void Draw(Graphics g, int border)
-    {        
-        Graphics gr = g.create(border, border, board.getBoardWidth(), board.getBoardWidth());
-        board.Draw(gr);
+    {
+        Drawer.setGraphics(g.create(border, border, Board.getBoardSize() * Drawer.getSquareWidth(), Board.getBoardSize() * Drawer.getSquareWidth()));
+        board.Draw();
     }
 }

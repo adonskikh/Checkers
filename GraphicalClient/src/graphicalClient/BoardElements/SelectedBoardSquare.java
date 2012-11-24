@@ -4,6 +4,7 @@
  */
 package graphicalClient.BoardElements;
 
+import graphicalClient.Drawer;
 import java.awt.Color;
 import java.awt.Graphics;
 
@@ -27,18 +28,11 @@ public class SelectedBoardSquare implements IBoardSquare
     }
 
     @Override
-    public void Draw(Graphics g)
+    public void Draw()
     {
-        square.Draw(g);
-        g.setColor(Color.RED);
-        g.drawRect(getX()*getWidth(), getY()*getWidth(), getWidth() - 1, getWidth() - 1);
+        square.Draw();
+        Drawer.DrawSelection(getX(), getY());
     }
-
-    /*@Override
-    public void MoveCheckerTo(IBoardSquare square) throws SquareIsNotEmptyException
-    {
-        this.square.MoveCheckerTo(square);
-    }*/
 
     @Override
     public void RemoveChecker()
@@ -59,12 +53,6 @@ public class SelectedBoardSquare implements IBoardSquare
     }
 
     @Override
-    public int getWidth()
-    {
-        return square.getWidth();
-    }
-
-    @Override
     public int getX()
     {
         return square.getX();
@@ -82,16 +70,23 @@ public class SelectedBoardSquare implements IBoardSquare
         return square.isEmpty();
     }
     
+    @Override
     public boolean Selected()
     {
         return true;
     }
     
+    @Override
     public IBoardSquare Select()
     {
         return this;
     }
     
+    /**
+     *
+     * @return
+     */
+    @Override
     public IBoardSquare CancelSelection()
     {
         return square;

@@ -5,38 +5,40 @@
 package graphicalClient.BoardElements;
 
 import java.awt.Color;
-import java.awt.Graphics;
 
 /**
  *
  * @author totzhe
  */
-public interface IChecker
-{
-
-    void Draw();
-    
-    IChecker Crown();
-    
-    //void MoveTo(IBoardSquare square) throws SquareIsNotEmptyException;
+public class BoardElement
+{  
+    protected Color color;
 
     /**
      * @return the color
      */
-    Color getColor();
+    public Color getColor()
+    {
+        return color;
+    }
+    
+    protected int x;
+    
+    protected int y;
 
     /**
      * @return the x
      */
-    int getX();
-    
-    void setX(int x);
+    public int getX()
+    {
+        return x;
+    }
 
     /**
      * @return the y
      */
-    int getY();
-    
-    void setY(int y);
-    
+    public int getY()
+    {
+        return y;
+    }
 }
