@@ -27,20 +27,18 @@ public final class WhiteChecker extends Checker
         }
         
         int dX = Math.abs(targetPoint.x - x), dY = targetPoint.y - y;
-        
-        if (board[targetPoint.x][targetPoint.y] == null)
+       
+        if (dX == 2 && dY == 2 && 
+                board[(targetPoint.x + x)/2][(targetPoint.y + y)/2] != null && 
+                board[(targetPoint.x + x)/2][(targetPoint.y + y)/2].getColor() != Color.BLACK) 
         {
-            if (dX == 2 && dY == 2 && 
-                    board[(targetPoint.x + x)/2][(targetPoint.y + y)/2] != null && 
-                    board[(targetPoint.x + x)/2][(targetPoint.y + y)/2].getColor() != Color.BLACK) 
-            {
-                return true;
-            }
-            if (dX == 1 && dY == 1) 
-            {
-                return true;
-            }
+            return true;
+        }       
+        if (dX == 1 && dY == 1) 
+        {
+            return true;
         }
+        
         return false;
     }
     

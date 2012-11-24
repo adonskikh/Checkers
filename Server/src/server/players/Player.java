@@ -18,13 +18,11 @@ public class Player
 {
     private int id;
     private ObjectInputStream reader; 
-    private ObjectOutputStream writer; 
-    private int checkersCount;
+    private ObjectOutputStream writer;
     private boolean connected;
     private int score;
     private Color color;
-    private IChecker current_checker;
-    private Point startPoint;    
+    private IChecker current_checker; 
     private IChecker[][] board;
     
     public Player(int id, Color color, ObjectInputStream reader, ObjectOutputStream writer)
@@ -34,10 +32,8 @@ public class Player
         this.color = color;
         this.reader = reader;
         this.writer = writer;
-        checkersCount = 0;
         connected = true;
         current_checker = null;
-        //reader = rdr;
     }
 
     public void setBoard(IChecker[][] gameBoard)
@@ -76,11 +72,9 @@ public class Player
         this.score = score;
     }
     
-    
-    
-    public boolean isAlive()
+    public boolean isConnected()
     {
-        return (checkersCount > 0 && connected);
+        return connected;
     }
     
     //Расстановка фигур на доске в начале игры
@@ -95,12 +89,10 @@ public class Player
                     if(j < 3 && color == Color.WHITE)
                     {
                         board[i][j] = new WhiteChecker(color, i, j, board);
-                        checkersCount++;
                     }
                     if(j >= board.length - 3  && color == Color.BLACK)
                     {
                         board[i][j] = new BlackChecker(Color.BLACK, i, j, board);
-                        checkersCount++;
                     }
                 }
             }
@@ -166,7 +158,7 @@ public class Player
     {
         try
         {
-                System.out.println("Player: " + name + ", Opponent: " + opponentName + ", color: " + color);
+            System.out.println("Player: " + name + ", Opponent: " + opponentName + ", color: " + color);
             writer.writeObject(color);
             writer.writeObject(name);
             writer.writeObject(opponentName);
@@ -200,4 +192,5 @@ public class Player
             System.out.println("Stream " + id + " writing error");            
         }
     }
+    
 }

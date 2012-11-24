@@ -135,13 +135,13 @@ public class Game
         return players[0].getScore() == countCheckers ? 0 : players[1].getScore() == countCheckers ? 1 : -1;
     }
     
-    public void MoveChecker(Point currentSquare, Point newSquare)
+    /*public void MoveChecker(Point currentSquare, Point newSquare)
     {
         board[currentSquare.x][currentSquare.y].setX(newSquare.x);
         board[currentSquare.x][currentSquare.y].setY(newSquare.y);
         board[newSquare.x][newSquare.y] = board[currentSquare.x][currentSquare.y];
         board[currentSquare.x][currentSquare.y] = null;
-    }
+    }*/
     
     public void Start()
     {
@@ -150,7 +150,7 @@ public class Game
         players[1].SendNewGameCommand(1, "black", "white");
         
         
-        while (players[0].isAlive() && players[1].isAlive())
+        while (players[0].isConnected() && players[1].isConnected() && players[0].getScore() <= 12 && players[1].getScore() <= 12)
         {
             System.out.println("New turn");
             Point targetPoint = currentPlayer.ReadMoveRequest();

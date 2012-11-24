@@ -59,6 +59,7 @@ public abstract  class Checker implements IChecker
     @Override
     public IChecker Crown()
     {
+        board[x][y] = null;
         return new CrownedChecker(this, this.board);
     }
     

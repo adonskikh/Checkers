@@ -27,21 +27,18 @@ public final class BlackChecker extends Checker
         }
         
         int dX = Math.abs(targetPoint.x - x), dY = y - targetPoint.y;
-        
-        if (board[targetPoint.x][targetPoint.y] == null)
+
+        if (dX == 2 && dY == 2
+                && board[(targetPoint.x + x) / 2][(targetPoint.y + y) / 2] != null
+                && board[(targetPoint.x + x) / 2][(targetPoint.y + y) / 2].getColor() == Color.WHITE)
         {
-            if (dX == 2 && dY == 2 && 
-                    board[(targetPoint.x + x)/2][(targetPoint.y + y)/2] != null && 
-                    board[(targetPoint.x + x)/2][(targetPoint.y + y)/2].getColor() == Color.WHITE) 
-            {
-                return true;
-            }
-            if (dX == 1 && dY == 1) 
-            {
-                return true;
-            }
+            return true;
         }
-        return false;    
+        if (dX == 1 && dY == 1)
+        {
+            return true;
+        }
+        return false;
     }
     
     @Override
