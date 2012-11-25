@@ -17,15 +17,21 @@ import javax.swing.JOptionPane;
  */
 public class Game extends Observable implements Runnable
 {
+
     private Player player;
-    
     private Board board;
-    
     private ServerConnection server;
-    
+    private Thread reader;
+
     public Game() throws SquareIsNotEmptyException
-    {      
+    {
+        player = new Player();
         server = new ServerConnection();
+        board = new Board(player, server);
+    }
+    
+    public void Start()
+    {     
         try
         {
             server.Connect("localhost");
@@ -33,40 +39,66 @@ public class Game extends Observable implements Runnable
         catch (IOException e)
         {
             JOptionPane.showMessageDialog(null, "Connection error: " + e.getMessage());
+            return;
         };
         NewGameCommand command = server.ReadNewGameCommand();
-        player = new Player(command.getColor(), command.getName(), command.getOpponentName());
+        player.Initialize(command.getColor(), command.getName(), command.getOpponentName());
 
-        board = new Board(player, server);
-        
-        Thread reader = new Thread(this);
+
+        reader = new Thread(this);
         reader.start();
+    }
+    
+    public void Finish()
+    {
+        server.Disconnect();
     }
 
     @Override
     public void run()
     {
-        while (true)
+        boolean gameOver = false;
+        while (!gameOver)
         {
-            MoveCommand cmd = server.ReadMoveCommand();
-            try
+            String commandType = server.ReadCommandType();
+            if (commandType != null)
             {
-                if (cmd != null)
+                switch (commandType)
                 {
-                    //JOptionPane.showMessageDialog(null, cmd.toString());
+                    case "Move":
+                        MoveCommand cmd = server.ReadMoveCommand();
+                        try
+                        {
+                            if (cmd != null)
+                            {
+                                //JOptionPane.showMessageDialog(null, cmd.toString());
 
-                    board.ExecuteMoveCommand(cmd);
-                    setChanged();
-                    notifyObservers();
-                    clearChanged();
+                                board.ExecuteMoveCommand(cmd);
+                                setChanged();
+                                notifyObservers();
+                                clearChanged();
+                            }
+                        }
+                        catch (SquareIsNotEmptyException e)
+                        {
+                            JOptionPane.showMessageDialog(null, "Cann't move checker. Target square is not empty.");
+                        }
+                        break;
+
+                    case "Game over":
+                        gameOver = true;
+                        JOptionPane.showMessageDialog(null, server.ReadGameOverMessage());
+                        break;
                 }
             }
-            catch (SquareIsNotEmptyException e)
+            else
             {
+                gameOver = true;
             }
         }
     }
 
+    
     public void ClickAction(int mouse_x, int mouse_y)
     {
         if (player.isActive())

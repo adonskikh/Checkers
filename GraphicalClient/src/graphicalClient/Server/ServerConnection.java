@@ -8,7 +8,6 @@ package graphicalClient.Server;
  *
  * @author totzhe
  */
-import graphicalClient.Server.MoveCommand;
 import java.awt.Point;
 import java.io.*;
 import java.net.*;
@@ -42,13 +41,13 @@ public class ServerConnection
             }
             catch (ClassNotFoundException ex)
             {
-                System.out.println("ClassNotFoundException");
+                System.out.println("ClassNotFoundException: " + ex.getMessage());
                 return null;
             }
         }
         catch (IOException e)
         {
-            System.out.println("Stream reading error");
+            System.out.println("Stream reading error: " + e.getMessage());
             return null;
         }
         if(color != null && name != null && opponentName != null)
@@ -59,64 +58,139 @@ public class ServerConnection
             return null;
     }
     
+    //Считывает из сокета тип команды
+    public String ReadCommandType()
+    {
+        String commandType;
+        try
+        {
+            try
+            {
+                commandType = (String) reader.readObject();
+            }
+            catch (ClassNotFoundException ex)
+            {
+                System.out.println("ClassNotFoundException: " + ex.getMessage());
+                return null;
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Stream reading error: " + e.getMessage());
+            return null;
+        }
+        return commandType;
+    }
+    
     //Считывает из сокета команду на перемещение шашки
     public MoveCommand ReadMoveCommand()
     {
-        Integer x;
-        Integer y;
-        Integer x_new;
-        Integer y_new;
-        Integer x_kill;
-        Integer y_kill;
+        Point startPoint;
+        Point finishPoint;
+        Point killedCheckerPoint;
         Boolean crowned;
         Boolean endOfTurn;
         try
         {
             try
             {
-                x = (Integer) reader.readObject();
-                y = (Integer) reader.readObject();
-                x_new = (Integer) reader.readObject();
-                y_new = (Integer) reader.readObject();
-                x_kill = (Integer) reader.readObject();
-                y_kill = (Integer) reader.readObject();
+                startPoint = (Point) reader.readObject();
+                finishPoint = (Point) reader.readObject();
+                killedCheckerPoint = (Point) reader.readObject();;
                 crowned = (Boolean) reader.readObject();
                 endOfTurn = (Boolean) reader.readObject();
             }
             catch (ClassNotFoundException ex)
             {
-                System.out.println("ClassNotFoundException");
+                System.out.println("ClassNotFoundException: " + ex.getMessage());
                 return null;
             }
         }
         catch (IOException e)
         {
-            System.out.println("Stream reading error");
+            System.out.println("Stream reading error: " + e.getMessage());
             return null;
         }
-        if(x != null && y != null && x_new != null && y_new != null && x_kill != null && y_kill != null && crowned != null && endOfTurn != null)
+        if(startPoint != null && finishPoint != null && killedCheckerPoint != null && crowned != null && endOfTurn != null)
         {
-            return new MoveCommand(x, y, x_new, y_new, x_kill, y_kill, crowned, endOfTurn);
+            return new MoveCommand(startPoint, finishPoint, killedCheckerPoint, crowned, endOfTurn);
         }
         else
             return null;
+    }
+    
+    //Считывает из сокета сообщение о конце игры
+    public String ReadGameOverMessage()
+    {
+        String message;
+        try
+        {
+            try
+            {
+                message = (String) reader.readObject();
+            }
+            catch (ClassNotFoundException ex)
+            {
+                System.out.println("ClassNotFoundException: " + ex.getMessage());
+                return null;
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Stream reading error: " + e.getMessage());
+            return null;
+        }
+        return message;
+    }
+
+    public void SendNewGameRequest(String login, String password)
+    {
+        try
+        {
+            writer.writeObject(login);
+            writer.writeObject(password);
+            writer.flush();
+        }
+        catch(IOException e)
+        {
+            System.out.println("Stream writing error: " + e.getMessage());            
+        }
     }
 
     public void SendMoveRequest(Point startPoint, Point finishPoint)
     {
         try
         {
-            /*String s = "hihihihihihi";
-            writer.writeObject(s);*/
-            writer.writeObject(new Integer(startPoint.x));
-            writer.writeObject(new Integer(startPoint.y));
-            writer.writeObject(new Integer(finishPoint.x));
-            writer.writeObject(new Integer(finishPoint.y));
+            writer.writeObject(startPoint);
+            writer.writeObject(finishPoint);
             writer.flush();
         }
-        catch(IOException e)
+        catch (IOException e)
         {
-            System.out.println("Stream writing error: " + e.getMessage());            
+            System.out.println("Stream writing error: " + e.getMessage());
+        }
+    }
+
+    public void Disconnect()
+    {
+        try
+        {
+            if (reader != null)
+            {
+                reader.close();
+            }
+            if (writer != null)
+            {
+                writer.close();
+            }
+            if (server != null)
+            {
+                server.close();
+            }
+        }
+        catch (IOException e)
+        {
+            System.out.println("Stream closing error: " + e.getMessage());
         }
     }
 }

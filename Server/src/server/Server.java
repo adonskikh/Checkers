@@ -33,12 +33,13 @@ public class Server
             listener = new ServerSocket(4445);
         } catch (IOException e)
         {
-            System.out.println("Couldn't listen to port 4445");
+            System.out.println("Couldn't listen to port: " + e.getMessage());
             System.exit(-1);
         }
 
         int i = 0;
-        while (i < 4)
+        boolean working = true;
+        while (working)
         {
             try
             {

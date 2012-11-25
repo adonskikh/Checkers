@@ -4,6 +4,7 @@
  */
 package graphicalClient.Server;
 
+import java.awt.Point;
 import java.io.Serializable;
 
 /**
@@ -12,28 +13,26 @@ import java.io.Serializable;
  */
 public class MoveCommand implements Serializable
 {
-   private int x, y, new_x, new_y, x_kill, y_kill;
+
+    private Point startPoint, finishPoint, killedCheckerPoint;
     private boolean crowned;
     private boolean endOfTurn;
-   
-   public MoveCommand(int x, int y, int new_x, int new_y, int x_kill, int y_kill, boolean crowned, boolean endOfTurn)
-   {
-       this.x = x;
-       this.y = y;
-       this.new_x = new_x;
-       this.new_y = new_y;
-       this.x_kill = x_kill;
-       this.y_kill = y_kill;
-       this.crowned = crowned;
-       this.endOfTurn = endOfTurn;
-   }
+
+    public MoveCommand(Point startPoint, Point finishPoint, Point killedCheckerPoint, boolean crowned, boolean endOfTurn)
+    {
+        this.startPoint = startPoint;
+        this.finishPoint = finishPoint;
+        this.killedCheckerPoint = killedCheckerPoint;
+        this.crowned = crowned;
+        this.endOfTurn = endOfTurn;
+    }
 
     /**
-     * @return the x
+     * @return the startPoint
      */
     public int getX()
     {
-        return x;
+        return startPoint.x;
     }
 
     /**
@@ -41,15 +40,15 @@ public class MoveCommand implements Serializable
      */
     public int getY()
     {
-        return y;
+        return startPoint.y;
     }
 
     /**
-     * @return the new_x
+     * @return the finishPoint
      */
     public int getNewX()
     {
-        return new_x;
+        return finishPoint.x;
     }
 
     /**
@@ -57,15 +56,15 @@ public class MoveCommand implements Serializable
      */
     public int getNewY()
     {
-        return new_y;
+        return finishPoint.y;
     }
 
     /**
-     * @return the x_kill
+     * @return the killedCheckerPoint
      */
     public int getX_kill()
     {
-        return x_kill;
+        return killedCheckerPoint.x;
     }
 
     /**
@@ -73,7 +72,7 @@ public class MoveCommand implements Serializable
      */
     public int getY_kill()
     {
-        return y_kill;
+        return killedCheckerPoint.y;
     }
 
     /**
@@ -92,8 +91,9 @@ public class MoveCommand implements Serializable
         return endOfTurn;
     }
     
+    @Override
     public String toString()
     {
-        return x + " " + y + " " + new_x + " " + new_y + " " + x_kill + " " + y_kill + " " + crowned + " " + endOfTurn;
+        return startPoint.toString() + " " + finishPoint.toString() + " " + killedCheckerPoint.toString() + " " + crowned + " " + endOfTurn;
     }
 }

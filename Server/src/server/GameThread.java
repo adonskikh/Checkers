@@ -37,32 +37,24 @@ public class GameThread implements Runnable
 
         try
         {
-            /*out1 = new PrintWriter(new BufferedOutputStream(playerSocket1.getOutputStream()), true);
-             out2 = new PrintWriter(new BufferedOutputStream(playerSocket2.getOutputStream()), true);*/
-            System.out.println("33333333333333333");
             out1 = new ObjectOutputStream(playerSocket1.getOutputStream());
             out2 = new ObjectOutputStream(playerSocket2.getOutputStream());
-            System.out.println("44444444444444444");
         }
         catch (IOException e)
         {
-            System.out.println("Can't open output stream");
-            System.exit(-1);
+            System.out.println("Can't open output stream: " + e.getMessage());
+            return;
         }
 
         try
         {
-            /*in1 = new BufferedReader(new InputStreamReader(playerSocket1.getInputStream()));
-             in2 = new BufferedReader(new InputStreamReader(playerSocket2.getInputStream()));*/
-            System.out.println("11111111111111111");
             in1 = new ObjectInputStream(playerSocket1.getInputStream());
             in2 = new ObjectInputStream(playerSocket2.getInputStream());
-            System.out.println("2222222222222222");
         }
         catch (IOException e)
         {
-            System.out.println("Can't open input stream");
-            System.exit(-1);
+            System.out.println("Can't open input stream: " + e.getMessage());
+            return;
         }
         
         int id1 = 1;//TODO: Получить их от клиента !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -76,32 +68,50 @@ public class GameThread implements Runnable
         try
         {
             out1.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't close output stream 1: " + e.getMessage());
+        }
+        try
+        {
             out2.close();
         }
         catch (IOException e)
         {
-            System.out.println("Can't close output stream");
-            System.exit(-1);
+            System.out.println("Can't close output stream 2: " + e.getMessage());
         }
         try
         {
             in1.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't close input stream 1: " + e.getMessage());
+        }
+        try
+        {
             in2.close();
         }
         catch (IOException e)
         {
-            System.out.println("Can't close input stream");
-            System.exit(-1);
+            System.out.println("Can't close input stream 2: " + e.getMessage());
         }
         try
         {
             playerSocket1.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't close socket 1: " + e.getMessage());
+        }
+        try
+        {
             playerSocket2.close();
         }
         catch (IOException e)
         {
-            System.out.println("Can't close socket");
-            System.exit(-1);
+            System.out.println("Can't close socket 2: " + e.getMessage());
         }
 
     }

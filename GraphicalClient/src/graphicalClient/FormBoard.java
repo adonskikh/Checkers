@@ -5,15 +5,8 @@
 package graphicalClient;
 
 
-//import graphicalClient.Server.ServerConnection;
 import graphicalClient.BoardElements.SquareIsNotEmptyException;
-
-//import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
-
 import java.awt.*;
-import java.io.IOException;
-import javax.swing.JOptionPane;
-import graphicalClient.BoardElements.*;
 import java.util.*;
 
 /**
@@ -32,16 +25,18 @@ public class FormBoard extends javax.swing.JFrame implements Observer
      */
     public FormBoard()
     {
+        initComponents();
+        this.invalidate();
         try
         {
             game = new Game();
             game.addObserver(this);
-        } catch (SquareIsNotEmptyException e)
+            repaint();
+        }
+        catch (SquareIsNotEmptyException e)
         {
             System.exit(-1);
         }
-        initComponents();
-        this.invalidate();
     }
 
     /**
@@ -54,7 +49,7 @@ public class FormBoard extends javax.swing.JFrame implements Observer
     private void initComponents()
     {
 
-        jButton1 = new javax.swing.JButton();
+        btnnewGame = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Checkers");
@@ -70,12 +65,12 @@ public class FormBoard extends javax.swing.JFrame implements Observer
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener()
+        btnnewGame.setText("New game");
+        btnnewGame.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jButton1ActionPerformed(evt);
+                btnnewGameActionPerformed(evt);
             }
         });
 
@@ -84,17 +79,17 @@ public class FormBoard extends javax.swing.JFrame implements Observer
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 557, Short.MAX_VALUE)
-                .addComponent(jButton1))
+                .addGap(0, 547, Short.MAX_VALUE)
+                .addComponent(btnnewGame))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addComponent(btnnewGame)
                 .addGap(0, 515, Short.MAX_VALUE))
         );
 
-        jButton1.getAccessibleContext().setAccessibleName("jButtonAction");
+        btnnewGame.getAccessibleContext().setAccessibleName("jButtonAction");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -112,17 +107,26 @@ public class FormBoard extends javax.swing.JFrame implements Observer
         // TODO add your handling code here:
     }//GEN-LAST:event_onMouseDown
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
-    {//GEN-HEADEREND:event_jButton1ActionPerformed
+    private void btnnewGameActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnnewGameActionPerformed
+    {//GEN-HEADEREND:event_btnnewGameActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+        game.Finish();
+        try
+        {
+            game = new Game();
+            game.addObserver(this);
+            paint(this.getGraphics());
+        }
+        catch (SquareIsNotEmptyException e)
+        {
+            System.exit(-1);
+        }
+        game.Start();
+    }//GEN-LAST:event_btnnewGameActionPerformed
 
     @Override
     public void paint(Graphics g)
     {
-        /*g.setColor(Color.yellow);
-         g.fillRect(10, 5, 100, 100);*/
         game.Draw(g, border);
     }
 
@@ -172,7 +176,7 @@ public class FormBoard extends javax.swing.JFrame implements Observer
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnnewGame;
     // End of variables declaration//GEN-END:variables
 
     public void update(Observable subject, Object o)

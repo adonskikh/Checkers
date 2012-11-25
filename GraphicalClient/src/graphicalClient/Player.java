@@ -12,14 +12,8 @@ import java.awt.*;
 public class Player
 {
     private Color color;
+    private String name, opponentName;
     private boolean active;
-    
-    public Player(Color color, String name, String opponentName)
-    {
-        this.color = color;
-        
-        active = (getColor() == Color.WHITE);
-    }
 
     /**
      * @return the color
@@ -27,6 +21,22 @@ public class Player
     public Color getColor()
     {
         return color;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName()
+    {
+        return name;
+    }
+
+    /**
+     * @return the opponentName
+     */
+    public String getOpponentName()
+    {
+        return opponentName;
     }
 
     /**
@@ -40,5 +50,13 @@ public class Player
     public void ChangeTurn()
     {
         active = !active;
+    }
+    
+    public void Initialize(Color color, String name, String opponentName)
+    {
+        this.color = color;
+        this.name = name;
+        this.opponentName = opponentName;
+        active = (getColor() == Color.WHITE);        
     }
 }

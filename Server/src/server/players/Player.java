@@ -23,8 +23,7 @@ public class Player
     private boolean connected;
     private int score;
     private Color color;
-    private IChecker current_checker;
-    private Point startPoint;    
+    private IChecker current_checker;    
     private IChecker[][] board;
     
     public Player(int id, Color color, ObjectInputStream reader, ObjectOutputStream writer)
@@ -124,39 +123,35 @@ public class Player
     //Считывает из сокета запрос на перемещение шашки от клиента
     public Point ReadMoveRequest()
     {
-        Integer x = null;
-        Integer y = null;
-        Integer x_new = null;
-        Integer y_new = null;
+        Point startPoint = null;
+        Point finishPoint = null;
         try
         {
             try
             {
-                x = (Integer) reader.readObject();
-                y = (Integer) reader.readObject();
-                x_new = (Integer) reader.readObject();
-                y_new = (Integer) reader.readObject();
-                System.out.println("1. [" + x + ", " + y + "] -> [" + x_new + ", " + y_new + "]");
+                startPoint = (Point) reader.readObject();
+                finishPoint = (Point) reader.readObject();
+                System.out.println("1. [" + startPoint.x + ", " + startPoint.y + "] -> [" + finishPoint.x + ", " + finishPoint.y + "]");
                 /*String s = (String) reader.readObject();
                 System.out.println(s);*/
             }
             catch (ClassNotFoundException ex)
             {
-                System.out.println("ClassNotFoundException");
+                System.out.println("ClassNotFoundException: " + ex.getMessage());
                 connected = false;
                 return null;
             }
         }
         catch (IOException e)
         {
-            System.out.println("Stream " + id + " reading error");
+            System.out.println("Stream " + id + " reading error: " + e.getMessage());
             connected = false;
             return null;
         }
-        if(x != null && y != null && x_new != null && y_new != null)
+        if(startPoint != null && finishPoint != null)
         {
-            current_checker = board[x][y];
-            return new Point(x_new, y_new);
+            current_checker = board[startPoint.x][startPoint.y];
+            return finishPoint;
         }
         else
             return null;
@@ -166,16 +161,16 @@ public class Player
     {
         try
         {
-                System.out.println("Player: " + name + ", Opponent: " + opponentName + ", color: " + color);
+            System.out.println("Player: " + name + ", Opponent: " + opponentName + ", color: " + color);
             writer.writeObject(color);
             writer.writeObject(name);
             writer.writeObject(opponentName);
             writer.flush();
         }
-        catch(IOException e)
+        catch (IOException e)
         {
             connected = false;
-            System.out.println("Stream " + id + " writing error");            
+            System.out.println("Stream " + id + " writing error: " + e.getMessage());
         }
     }
 
@@ -183,21 +178,34 @@ public class Player
     {
         try
         {
-                System.out.println("2. [" + startPoint.x + ", " + startPoint.y + "] -> [" + finishPoint.x + ", " + finishPoint.y + "]");
-            writer.writeObject(startPoint.x);
-            writer.writeObject(startPoint.y);
-            writer.writeObject(finishPoint.x);
-            writer.writeObject(finishPoint.y);
-            writer.writeObject(killedCheckerPoint.x);
-            writer.writeObject(killedCheckerPoint.y);
+            System.out.println("2. [" + startPoint.x + ", " + startPoint.y + "] -> [" + finishPoint.x + ", " + finishPoint.y + "]");
+            writer.writeObject("Move");
+            writer.writeObject(startPoint);
+            writer.writeObject(finishPoint);
+            writer.writeObject(killedCheckerPoint);
             writer.writeObject(turnToQueen);
             writer.writeObject(endTurn);
             writer.flush();
         }
-        catch(IOException e)
+        catch (IOException e)
         {
             connected = false;
-            System.out.println("Stream " + id + " writing error");            
+            System.out.println("Stream " + id + " writing error: " + e.getMessage());
+        }
+    }
+
+    public void SendGameOverCommand(String message)
+    {
+        try
+        {
+            writer.writeObject("Game over");
+            writer.writeObject(message);
+            writer.flush();
+        }
+        catch (IOException e)
+        {
+            connected = false;
+            System.out.println("Stream " + id + " writing error: " + e.getMessage());
         }
     }
 }
