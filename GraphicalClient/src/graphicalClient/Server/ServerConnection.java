@@ -119,4 +119,18 @@ public class ServerConnection
             System.out.println("Stream writing error: " + e.getMessage());            
         }
     }
+    
+    public void SendNewGameRequest(String login, String password)
+    {
+        try
+        {
+            writer.writeObject(login);
+            writer.writeObject(password);
+            writer.flush();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Stream writing error: " + e.getMessage());
+        }
+    }
 }
