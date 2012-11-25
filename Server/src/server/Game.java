@@ -5,7 +5,6 @@
 package server;
 //import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import java.awt.*;
-import java.io.IOException;
 import server.checkers.IChecker;
 import server.players.Player;
 
@@ -56,20 +55,23 @@ public class Game
         
         if(board[targetPoint.x][targetPoint.y] != null)
         {
-            currentPlayer.SendMoveCommand(new Point(-1, -1), startPoint, finishPoint, endTurn, turnToQueen);
+            currentPlayer.SendMoveCommand(startPoint, finishPoint, new Point(-1, -1), turnToQueen, endTurn);
+            System.out.println("targetPoint is not null");
             return;
         }
         //Если может убить кого-нибудь данным ходом
         if(currentPlayer.getCurrentChecker().IfThisOneKillSmb(targetPoint))
         {
             killedChecker = currentPlayer.getCurrentChecker().KillEnemysCheckers(targetPoint);
-            currentPlayer.getCurrentChecker().ChangeCoords(targetPoint);
+            finishPoint = currentPlayer.getCurrentChecker().ChangeCoords(targetPoint);
             endTurn = !currentPlayer.getCurrentChecker().CanKillSmb() ? true : false;
             currentPlayer.IncScore();
+            System.out.println("This one can kill smb");
         }
         //Если данным ходом, никого не бьет
         else
         {
+            System.out.println("This one can't kill smb");
             boolean found = false;
             //Должна ли хотя бы какая-нибудь шашка бить
             for(int i = 0; i < boardSize; i++)
@@ -89,19 +91,23 @@ public class Game
                 }
                 if(found)
                 {
+                    System.out.println("Other checker can kill");
                     break;
                 }
             }
             
             //Не может никого убить сама, другие тоже. Просто перемещаем, если можно
-            if(currentPlayer.getCurrentChecker().CheckMotion(targetPoint))
+            System.out.println("targetPoint = (" + targetPoint.x + ", " + targetPoint.y + ")");
+            if(currentPlayer.getCurrentChecker().CheckMotion(targetPoint) && !found)
             {
-                currentPlayer.getCurrentChecker().ChangeCoords(targetPoint);
+                System.out.println("Moving nnnnnnnnnnnnnnnnn");
+                finishPoint = currentPlayer.getCurrentChecker().ChangeCoords(targetPoint);
                 killedChecker = new Point(-1, -1);
                 endTurn = true;
             }
             else
             {
+                System.out.println("Cannot move");
                 killedChecker = new Point(-1, -1);
                 endTurn = false;
             }       
@@ -115,6 +121,7 @@ public class Game
             board[currentPlayer.getCurrentChecker().getX()][currentPlayer.getCurrentChecker().getY()] = currentPlayer.getCurrentChecker().Crown();
         }
         
+        System.out.println("Sending answer");
         for(int i = 0; i < players.length; i++)
             players[i].SendMoveCommand(startPoint, finishPoint, killedChecker, turnToQueen, endTurn);
         
@@ -127,13 +134,14 @@ public class Game
         return players[0].getScore() == countCheckers ? 0 : players[1].getScore() == countCheckers ? 1 : -1;
     }
     
-    public void MoveChecker(Point currentSquare, Point newSquare)
+
+    /*public void MoveChecker(Point currentSquare, Point newSquare)
     {
         board[currentSquare.x][currentSquare.y].setX(newSquare.x);
         board[currentSquare.x][currentSquare.y].setY(newSquare.y);
         board[newSquare.x][newSquare.y] = board[currentSquare.x][currentSquare.y];
         board[currentSquare.x][currentSquare.y] = null;
-    }
+    }*/
     
     public void Start()
     {
@@ -141,8 +149,8 @@ public class Game
         players[0].SendNewGameCommand(0, "white", "black");
         players[1].SendNewGameCommand(1, "black", "white");
         
-        
-        while (players[0].isAlive() && players[1].isAlive())
+
+        while (players[0].isConnected() && players[1].isConnected() && players[0].getScore() <= 12 && players[1].getScore() <= 12)
         {
             System.out.println("New turn");
             Point targetPoint = currentPlayer.ReadMoveRequest();
@@ -150,14 +158,14 @@ public class Game
             if (targetPoint != null)
             {
                 System.out.println("Moving");
-                //ActionOnRecieveMessage(targetPoint); //раскомментировать потом
+                ActionOnRecieveMessage(targetPoint); //раскомментировать потом
 
 
                 //заглушка  
-                for(int i = 0; i < players.length; i++)
+                /*for(int i = 0; i < players.length; i++)
                     players[i].SendMoveCommand(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint, new Point(-1, -1), true, true);
                 MoveChecker(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint);
-                currentPlayer = currentPlayer == players[0] ? players[1] : players[0];
+                currentPlayer = currentPlayer == players[0] ? players[1] : players[0];*/
                 //if(currentPlayer.getColor() == Color.WHITE && players[0].getColor() == Color.WHITE)
             }
         }

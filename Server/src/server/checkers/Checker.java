@@ -59,6 +59,7 @@ public abstract  class Checker implements IChecker
     @Override
     public IChecker Crown()
     {
+        board[x][y] = null;
         return new CrownedChecker(this, this.board);
     }
     
@@ -84,7 +85,7 @@ public abstract  class Checker implements IChecker
     @Override
     public boolean IfThisOneKillSmb(Point targetPoint)
     {
-        if(Math.abs(targetPoint.y - x) == 2)
+        if(Math.abs(targetPoint.y - y) == 2)
         {
             Point tmp = new Point((targetPoint.x + x)/2, (targetPoint.y + y)/2);
             if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != color)
@@ -96,10 +97,14 @@ public abstract  class Checker implements IChecker
     }
     
     @Override
-    public void ChangeCoords(Point targetPoint)
+    public Point ChangeCoords(Point targetPoint)
     {
+        board[x][y] = null;
         x = targetPoint.x;
         y = targetPoint.y;
+        board[x][y] = this;
+        
+        return new Point(x, y);
     }
     
     @Override

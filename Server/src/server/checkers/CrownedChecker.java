@@ -16,6 +16,7 @@ public final class CrownedChecker implements IChecker
     {
         this.checker = checker;
         this.board = masCheckers;
+        board[getX()][getY()] = this;
     }
     
     private IChecker checker;
@@ -93,18 +94,15 @@ public final class CrownedChecker implements IChecker
         int stepX = getX() < targetPoint.x ? 1 : -1;
         int stepY = getY() < targetPoint.y ? 1 : -1;
         
-        if (board[targetPoint.x][targetPoint.y] == null)
+        if (Math.abs(targetPoint.x - this.getX()) == Math.abs(targetPoint.y - this.getY()))
         {
-            if (Math.abs(targetPoint.x - this.getX()) == Math.abs(targetPoint.y - this.getY()))
-            {
-                return Go(stepX, stepY, targetPoint.x, targetPoint.y);
-            }
+            return Go(stepX, stepY, targetPoint.x, targetPoint.y);
         }
+        
         return false;
     }
     
     @Override
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ДОПИСАТЬ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public Point KillEnemysCheckers(Point point)
     {
         int stepX = getX() < point.x ? 1 : -1;
@@ -118,14 +116,12 @@ public final class CrownedChecker implements IChecker
             {
                 board[cur_x][cur_y] = null;
                 break;
-                //return 1;
             }
             cur_x += stepX;
             cur_y += stepY;   
         }
         
         return new Point(cur_x, cur_y);
-        //return 0;
     }
     
     /**
@@ -221,10 +217,14 @@ public final class CrownedChecker implements IChecker
     }
     
     @Override
-    public void ChangeCoords(Point targetPoint)
+    public Point ChangeCoords(Point targetPoint)
     {
+        board[getX()][getY()] = null;
         setX(targetPoint.x);
         setY(targetPoint.y);
+        board[getX()][getY()] = this;
+        
+        return new Point(getX(), getY());
     }
     
     @Override

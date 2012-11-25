@@ -10,6 +10,9 @@ package server;
  */
 import java.io.*;
 import java.net.*;
+import java.sql.Connection;
+import server.db.DataBase;
+import server.db.MD5;
 
 public class Server
 {
@@ -22,6 +25,25 @@ public class Server
     public static void main(String[] args) throws IOException
     {
         System.out.println("Welcome to Server side");
+        
+        /*DataBase dbc = new DataBase();
+        Connection connection = dbc.CreateConnection();
+        
+        if(connection == null)
+        {
+            System.out.println("Connection with DB is null");
+        }
+        //connection
+        MD5 md5 = new MD5();
+        String password = md5.getHash("gamer");
+        System.out.println(password);
+        
+        if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
+        {
+            System.out.println("gamer in DB");
+        }
+        
+        dbc.CloseConnection(connection);*/
 
         ServerSocket listener = null;
         Socket clientSocket1 = null;

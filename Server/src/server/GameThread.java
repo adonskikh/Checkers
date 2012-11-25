@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.io.*;
 import java.net.*;
 import server.players.Player;
-/*import java.util.logging.Level;
-import java.util.logging.Logger;*/
 
 /**
  *

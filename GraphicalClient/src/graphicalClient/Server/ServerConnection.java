@@ -170,7 +170,7 @@ public class ServerConnection
             System.out.println("Stream writing error: " + e.getMessage());
         }
     }
-
+    
     public void Disconnect()
     {
         try

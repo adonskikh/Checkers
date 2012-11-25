@@ -69,7 +69,7 @@ public class Game extends Observable implements Runnable
                         MoveCommand cmd = server.ReadMoveCommand();
                         try
                         {
-                            if (cmd != null)
+                            if (cmd != null && !(cmd.getX() == cmd.getNewX() && cmd.getY() == cmd.getNewY()))
                             {
                                 //JOptionPane.showMessageDialog(null, cmd.toString());
 
