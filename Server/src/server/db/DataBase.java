@@ -7,6 +7,7 @@ package server.db;
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Properties;
+import server.players.Player;
 
 /**
  *
@@ -57,23 +58,62 @@ public final class DataBase
         }
     }
     
-    public boolean IsPlayerLikeThisInDB(Connection connection, String name, String password)
+    public int IsPlayerLikeThisInDB(Connection connection, String name, String password)
     {
         try
         {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT id FROM PLAYER WHERE name = '"+ name + "' and password = '" + password +"';");
-            if(resultSet.wasNull())
+            if(resultSet.next())
             {
-                return false;
+                //int id = resultSet.getInt("id");
+                return resultSet.getInt("id");
             }
-            return true;
+            statement.close();
+            
+            return -1;
         }
         catch (SQLException exception)
         {
             System.err.println("IsPlayerLikeThisInDB");
         }
         
-        return false;
+        return -1;
+    }
+    
+    public void GetPlayersInfo(Connection connection, Player player)
+    {
+        try
+        {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT won_games_count FROM PLAYER WHERE id = '"+ player.getID() + "';");
+            if(resultSet.next())
+            {
+                player.setWonGamesCount(resultSet.getInt("won_games_count"));
+                player.setLostGamesCount(resultSet.getInt("lost_games_count"));
+            }
+            statement.close();
+        }
+        catch(SQLException exception)
+        {
+            System.err.println("GetPlayersInfo");
+        }
+    }
+    
+    public void UpdatePlayerInfo(Connection connection, Player player)
+    {
+        try
+        {
+            PreparedStatement statement = connection.prepareStatement("UPDATE PLAYER SET won_games_count = ?, lost_games_count = ? WHERE id = ?");
+            statement.setInt(1, player.getWonGamesCount());
+            statement.setInt(2, player.getLostGamesCount());
+            statement.setInt(3, player.getID());
+            statement.executeUpdate();
+            statement.close();
+        }
+        catch(SQLException exception)
+        {
+            System.err.println("UpdatePlayersInfo");
+        }
     }
 }

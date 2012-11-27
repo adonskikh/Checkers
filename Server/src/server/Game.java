@@ -118,7 +118,9 @@ public class Game
         if(currentPlayer.getCurrentChecker().IfCanTurnToQueen())
         {
             turnToQueen = true;
-            board[currentPlayer.getCurrentChecker().getX()][currentPlayer.getCurrentChecker().getY()] = currentPlayer.getCurrentChecker().Crown();
+            Point tmp = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
+            board[tmp.x][tmp.y] = currentPlayer.getCurrentChecker().Crown();
+            currentPlayer.setCurrentChecker(board[tmp.x][tmp.y]);
         }
         
         System.out.println("Sending answer");
@@ -134,22 +136,13 @@ public class Game
         return players[0].getScore() == countCheckers ? 0 : players[1].getScore() == countCheckers ? 1 : -1;
     }
     
-
-    /*public void MoveChecker(Point currentSquare, Point newSquare)
-    {
-        board[currentSquare.x][currentSquare.y].setX(newSquare.x);
-        board[currentSquare.x][currentSquare.y].setY(newSquare.y);
-        board[newSquare.x][newSquare.y] = board[currentSquare.x][currentSquare.y];
-        board[currentSquare.x][currentSquare.y] = null;
-    }*/
-    
     public void Start()
     {
         //TODO: Вероятно, здесь будет всякая подготовительная ерунда вроде выбора из БД и отправки имен игроков друг другу
-        players[0].SendNewGameCommand(0, "white", "black");
-        players[1].SendNewGameCommand(1, "black", "white");
+        players[0].SendNewGameCommand(0, players[0].getName(), players[1].getName());
+        players[1].SendNewGameCommand(1, players[1].getName(), players[0].getName());
         
-
+        
         while (players[0].isConnected() && players[1].isConnected() && players[0].getScore() <= 12 && players[1].getScore() <= 12)
         {
             System.out.println("New turn");
@@ -159,17 +152,19 @@ public class Game
             {
                 System.out.println("Moving");
                 ActionOnRecieveMessage(targetPoint); //раскомментировать потом
-
-
-                //заглушка  
-                /*for(int i = 0; i < players.length; i++)
-                    players[i].SendMoveCommand(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint, new Point(-1, -1), true, true);
-                MoveChecker(new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY()), targetPoint);
-                currentPlayer = currentPlayer == players[0] ? players[1] : players[0];*/
-                //if(currentPlayer.getColor() == Color.WHITE && players[0].getColor() == Color.WHITE)
             }
         }
-
+        
         //TODO: Отправить победителю и проигравшему соответствующие сообщения
+        if(players[0].getScore() > players[1].getScore())
+        {
+            players[0].SendEndGameCommand("You win! Congrats!");
+            players[1].SendEndGameCommand("Game Over");
+        }
+        else
+        {
+            players[1].SendEndGameCommand("You win! Congrats!");
+            players[0].SendEndGameCommand("Game Over");
+        }
     }
 }

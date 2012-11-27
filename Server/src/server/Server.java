@@ -38,12 +38,12 @@ public class Server
         String password = md5.getHash("gamer");
         System.out.println(password);
         
-        if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
+        /*if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
         {
             System.out.println("gamer in DB");
-        }
+        }*/
         
-        dbc.CloseConnection(connection);*/
+        //dbc.CloseConnection(connection);*/
 
         ServerSocket listener = null;
         Socket clientSocket1 = null;
