@@ -69,6 +69,7 @@ public final class DataBase
                 //int id = resultSet.getInt("id");
                 return resultSet.getInt("id");
             }
+            statement.close();
             
             return -1;
         }
@@ -85,12 +86,13 @@ public final class DataBase
         try
         {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT wongamescount FROM PLAYER WHERE id = '"+ player.getID() + "';");
+            ResultSet resultSet = statement.executeQuery("SELECT won_games_count FROM PLAYER WHERE id = '"+ player.getID() + "';");
             if(resultSet.next())
             {
-                player.setWonGamesCount(resultSet.getInt("wongamecount"));
-                player.setLostGamesCount(resultSet.getInt("lostgamescount"));
+                player.setWonGamesCount(resultSet.getInt("won_games_count"));
+                player.setLostGamesCount(resultSet.getInt("lost_games_count"));
             }
+            statement.close();
         }
         catch(SQLException exception)
         {
@@ -102,13 +104,16 @@ public final class DataBase
     {
         try
         {
-            Statement statement = connection.createStatement();
-            //ResultSet resultSet = statement.executeUpdate();
-            
+            PreparedStatement statement = connection.prepareStatement("UPDATE PLAYER SET won_games_count = ?, lost_games_count = ? WHERE id = ?");
+            statement.setInt(1, player.getWonGamesCount());
+            statement.setInt(2, player.getLostGamesCount());
+            statement.setInt(3, player.getID());
+            statement.executeUpdate();
+            statement.close();
         }
         catch(SQLException exception)
         {
-            
+            System.err.println("UpdatePlayersInfo");
         }
     }
 }
