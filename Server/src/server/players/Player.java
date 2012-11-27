@@ -24,6 +24,8 @@ public class Player
     private Color color;
     private IChecker current_checker; 
     private IChecker[][] board;
+    private int wongamescount;
+    private int lostgamescount;
     
     public Player(int id, Color color, ObjectInputStream reader, ObjectOutputStream writer)
     {
@@ -34,6 +36,31 @@ public class Player
         this.writer = writer;
         connected = true;
         current_checker = null;
+    }
+    
+    public int getWonGamesCount()
+    {
+        return wongamescount;
+    }
+    
+    public void setWonGamesCount(int count)
+    {
+        lostgamescount = count;
+    }
+    
+    public int getLostGamesCount()
+    {
+        return lostgamescount;
+    }
+    
+    public void setLostGamesCount(int count)
+    {
+        wongamescount = count;
+    }
+    
+    public int getID()
+    {
+        return  id;
     }
 
     public void setBoard(IChecker[][] gameBoard)
@@ -50,6 +77,12 @@ public class Player
     {
         return current_checker;
     }
+    
+    public void setCurrentChecker(IChecker checker)
+    {
+        current_checker = checker;
+    }
+            
 
     /**
      * @return the score
@@ -190,6 +223,20 @@ public class Player
         {
             connected = false;
             System.out.println("Stream " + id + " writing error");            
+        }
+    }
+    
+    public void SendEndGameCommand(String message)
+    {
+        try
+        {
+            writer.writeObject(message);
+            writer.flush();
+        }
+        catch(IOException exception)
+        {
+            connected = false;
+            System.out.println("Stream " + id + " writing error");
         }
     }
     

@@ -7,6 +7,7 @@ package server.db;
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Properties;
+import server.players.Player;
 
 /**
  *
@@ -57,23 +58,57 @@ public final class DataBase
         }
     }
     
-    public boolean IsPlayerLikeThisInDB(Connection connection, String name, String password)
+    public int IsPlayerLikeThisInDB(Connection connection, String name, String password)
     {
         try
         {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT id FROM PLAYER WHERE name = '"+ name + "' and password = '" + password +"';");
-            if(resultSet.wasNull())
+            if(resultSet.next())
             {
-                return false;
+                //int id = resultSet.getInt("id");
+                return resultSet.getInt("id");
             }
-            return true;
+            
+            return -1;
         }
         catch (SQLException exception)
         {
             System.err.println("IsPlayerLikeThisInDB");
         }
         
-        return false;
+        return -1;
+    }
+    
+    public void GetPlayersInfo(Connection connection, Player player)
+    {
+        try
+        {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT wongamescount FROM PLAYER WHERE id = '"+ player.getID() + "';");
+            if(resultSet.next())
+            {
+                player.setWonGamesCount(resultSet.getInt("wongamecount"));
+                player.setLostGamesCount(resultSet.getInt("lostgamescount"));
+            }
+        }
+        catch(SQLException exception)
+        {
+            System.err.println("GetPlayersInfo");
+        }
+    }
+    
+    public void UpdatePlayerInfo(Connection connection, Player player)
+    {
+        try
+        {
+            Statement statement = connection.createStatement();
+            //ResultSet resultSet = statement.executeUpdate();
+            
+        }
+        catch(SQLException exception)
+        {
+            
+        }
     }
 }

@@ -38,10 +38,10 @@ public class Server
         String password = md5.getHash("gamer");
         System.out.println(password);
         
-        if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
+        /*if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
         {
             System.out.println("gamer in DB");
-        }
+        }*/
         
         dbc.CloseConnection(connection);
 

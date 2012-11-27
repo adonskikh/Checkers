@@ -68,7 +68,7 @@ public final class BlackChecker extends Checker
     @Override
     public boolean IfCanTurnToQueen()
     {
-        return y == board.length;
+        return y == 0;
     }
     
 }

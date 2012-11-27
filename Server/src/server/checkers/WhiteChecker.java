@@ -69,7 +69,7 @@ public final class WhiteChecker extends Checker
     @Override
     public boolean IfCanTurnToQueen()
     {
-        return y == 0;
+        return y == board.length - 1;
     }
     
 }
