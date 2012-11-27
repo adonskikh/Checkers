@@ -132,7 +132,7 @@ public final class CrownedChecker implements IChecker
     @Override
     public boolean CanKillSmb()
     {
-        Point tmp;
+        /*Point tmp;
         boolean founded = false;
         Point masSteps[] = {new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)}; 
         for (int i = 0; i < 4; i++)
@@ -170,6 +170,36 @@ public final class CrownedChecker implements IChecker
             }
         }
         
+        return false;*/
+        Point tmp;
+        Point masSteps[] = { new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)};
+        for (int i = 0; i < 4; i++)
+        {
+            tmp = new Point(getX() + masSteps[i].x, getY() + masSteps[i].y);
+
+            while (tmp.x < board.length && tmp.y < board.length && tmp.x > -1 && tmp.y > -1)
+            {
+                //Дамка не может ходить через свои шашки
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == this.getColor())
+                {
+                    break;
+                }
+
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && tmp.x + masSteps[i].x < board.length && tmp.x + masSteps[i].x >= 0 && tmp.y + masSteps[i].y < board.length && tmp.y + masSteps[i].y >= 0)
+                {
+                    if (board[tmp.x + masSteps[i].x][tmp.y + masSteps[i].x] == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                tmp.x += masSteps[i].x;
+                tmp.y += masSteps[i].y;
+            }
+        }
         return false;
     }
     
@@ -215,7 +245,7 @@ public final class CrownedChecker implements IChecker
             return false;
         }
     }
-    
+
     @Override
     public Point ChangeCoords(Point targetPoint)
     {

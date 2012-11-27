@@ -42,6 +42,23 @@ public final class WhiteChecker extends Checker
         return false;
     }
     
+    @Override
+    public boolean IfThisOneKillSmb(Point targetPoint)
+    {
+        if(targetPoint.y - y != 2)
+        {
+            return false;
+        }
+        
+        Point tmp = new Point((targetPoint.x + x) / 2, (targetPoint.y + y) / 2);
+        if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == Color.BLACK)
+        {
+            return true;
+        }   
+        
+        return false;
+    }
+    
     //Проверяет, может ли шашка убить вражескую
     @Override
     public boolean CanKillSmb()

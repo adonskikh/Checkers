@@ -53,7 +53,7 @@ public class Game
         startPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
         finishPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
         
-        if(board[targetPoint.x][targetPoint.y] != null)
+        if(board[targetPoint.x][targetPoint.y] != null && Math.abs(targetPoint.x - currentPlayer.getCurrentChecker().getX()) == Math.abs(targetPoint.y - currentPlayer.getCurrentChecker().getY()))
         {
             currentPlayer.SendMoveCommand(startPoint, finishPoint, new Point(-1, -1), turnToQueen, endTurn);
             System.out.println("targetPoint is not null");
@@ -147,6 +147,7 @@ public class Game
         {
             System.out.println("New turn");
             Point targetPoint = currentPlayer.ReadMoveRequest();
+            
             System.out.println(currentPlayer.getColor().toString());
             if (targetPoint != null)
             {
