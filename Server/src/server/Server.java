@@ -184,9 +184,10 @@ public class Server
         {
             System.out.println("Player is null");
         }
-        dbc.GetPlayersInfo(player);//new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
+        //new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
         if (player != null)
         {
+            dbc.GetPlayersInfo(player);
             player.Initialize(color, socket, in, out);
         }
         return player;
