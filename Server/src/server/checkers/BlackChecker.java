@@ -45,30 +45,48 @@ public final class BlackChecker extends Checker
     //Проверяет, может ли шашка убить вражескую
     public boolean CanKillSmb()
     {
-        if(y - 2 > -1)
+        if (y - 2 > -1)
+        {
+            if (x - 1 > -1 && board[x - 1][y - 1] != null && board[x - 1][y - 1].getColor() == Color.WHITE)
             {
-                if(x - 1 > -1 && board[x - 1][y - 1] != null && board[x - 1][y - 1].getColor() == Color.WHITE)
+                if (x - 2 > -1 && board[x - 2][y - 2] == null)
                 {
-                    if(x - 2 > -1 && board[x - 2][y - 2] == null)
-                    {
-                        return true;
-                    }  
+                    System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + (x - 1) + ", " + (y - 1) + "]");
+                    return true;
                 }
-                if(x + 1 < board.length && board[x + 1][y - 1] != null && board[x + 1][y - 1].getColor() == Color.WHITE)
-                {
-                    if(x + 2 < board.length && board[x + 2][y - 2] == null)
-                    {
-                        return true;
-                    }  
-                }                
             }
-            return false;    
+            if (x + 1 < board.length && board[x + 1][y - 1] != null && board[x + 1][y - 1].getColor() == Color.WHITE)
+            {
+                if (x + 2 < board.length && board[x + 2][y - 2] == null)
+                {
+                    System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + (x + 1) + ", " + (y - 1) + "]");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    
+
     @Override
     public boolean IfCanTurnToQueen()
     {
         return y == 0;
     }
-    
+
+    @Override
+    public boolean IfThisOneKillSmb(Point targetPoint)
+    {
+        if (y - targetPoint.y != 2)
+        {
+            return false;
+        }
+
+        Point tmp = new Point((targetPoint.x + x) / 2, (targetPoint.y + y) / 2);
+        if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == Color.WHITE)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

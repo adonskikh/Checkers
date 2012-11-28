@@ -32,11 +32,27 @@ public class Player
     }
 
     /**
+     * @param name the name to set
+     */
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    /**
      * @return the opponentName
      */
     public String getOpponentName()
     {
         return opponentName;
+    }
+
+    /**
+     * @param opponentName the opponentName to set
+     */
+    public void setOpponentName(String opponentName)
+    {
+        this.opponentName = opponentName;
     }
 
     /**
@@ -55,8 +71,8 @@ public class Player
     public void Initialize(Color color, String name, String opponentName)
     {
         this.color = color;
-        this.name = name;
-        this.opponentName = opponentName;
+        this.setName(name);
+        this.setOpponentName(opponentName);
         active = (getColor() == Color.WHITE);        
     }
 }

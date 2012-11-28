@@ -22,16 +22,20 @@ public class Game extends Observable implements Runnable
     private Board board;
     private ServerConnection server;
     private Thread reader;
+    private String status;
+    private boolean gameOver = false;
 
     public Game() throws SquareIsNotEmptyException
     {
         player = new Player();
         server = new ServerConnection();
         board = new Board(player, server);
+        status = "Checkers";
     }
     
-    public void Start()
+    public void Start(String login, String password)
     {     
+        status = "Connecting to the server";
         try
         {
             server.Connect("localhost");
@@ -41,23 +45,63 @@ public class Game extends Observable implements Runnable
             JOptionPane.showMessageDialog(null, "Connection error: " + e.getMessage());
             return;
         };
+        try
+        {
+            //JOptionPane.showMessageDialog(null, login + " " + password);
+            server.SendNewGameRequest(login, password);
+        }
+        catch (IOException e)
+        {
+            System.out.println("Server connection error: " + e.getMessage());
+            return;
+        }
         NewGameCommand command = server.ReadNewGameCommand();
-        player.Initialize(command.getColor(), command.getName(), command.getOpponentName());
+        if (command != null)
+        {
+            if (command.getColor() == null)
+            {
+                JOptionPane.showMessageDialog(null, "Bad login or password.");
+                return;
+            }
+            player.Initialize(command.getColor(), command.getName(), command.getOpponentName());
 
+            System.out.println("111111111111111");
 
-        reader = new Thread(this);
-        reader.start();
+            reader = new Thread(this);
+            reader.start();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "Connection timeout.");
+        }
+    }
+    
+    public String getStatus()
+    {
+        return status;
     }
     
     public void Finish()
     {
+        gameOver = true;
         server.Disconnect();
     }
 
     @Override
     public void run()
     {
-        boolean gameOver = false;
+        if (player.isActive())
+        {
+            status = "Your turn";
+        }
+        else
+        {
+            status = "Opponent's turn";
+        }
+        setChanged();
+        notifyObservers();
+        clearChanged();
+        
         while (!gameOver)
         {
             String commandType = server.ReadCommandType();
@@ -73,7 +117,15 @@ public class Game extends Observable implements Runnable
                             {
                                 //JOptionPane.showMessageDialog(null, cmd.toString());
 
-                                board.ExecuteMoveCommand(cmd);
+                                board.ExecuteMoveCommand(cmd);                                
+                                if (cmd.isEndOfTurn())
+                                {
+                                    player.ChangeTurn();
+                                    if(player.isActive())
+                                        status = "Your turn";
+                                    else
+                                        status = "Opponent's turn";
+                                }
                                 setChanged();
                                 notifyObservers();
                                 clearChanged();
@@ -87,12 +139,24 @@ public class Game extends Observable implements Runnable
 
                     case "Game over":
                         gameOver = true;
-                        JOptionPane.showMessageDialog(null, server.ReadGameOverMessage());
+                        status = server.ReadGameOverMessage();
+                        JOptionPane.showMessageDialog(null, status);
+                        setChanged();
+                        notifyObservers();
+                        clearChanged();
                         break;
                 }
             }
             else
             {
+                if (!gameOver)
+                {
+                    JOptionPane.showMessageDialog(null, "Connection lost");
+                }
+                status = "Disconnected";
+                setChanged();
+                notifyObservers();
+                clearChanged();
                 gameOver = true;
             }
         }

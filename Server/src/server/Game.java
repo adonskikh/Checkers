@@ -53,7 +53,7 @@ public class Game
         startPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
         finishPoint = new Point(currentPlayer.getCurrentChecker().getX(), currentPlayer.getCurrentChecker().getY());
         
-        if(board[targetPoint.x][targetPoint.y] != null)
+        if(board[targetPoint.x][targetPoint.y] != null && Math.abs(targetPoint.x - startPoint.x) == Math.abs(targetPoint.y - startPoint.y))
         {
             currentPlayer.SendMoveCommand(startPoint, finishPoint, new Point(-1, -1), turnToQueen, endTurn);
             System.out.println("targetPoint is not null");
@@ -143,7 +143,7 @@ public class Game
         players[1].SendNewGameCommand(1, players[1].getName(), players[0].getName());
         
         
-        while (players[0].isConnected() && players[1].isConnected() && players[0].getScore() <= 12 && players[1].getScore() <= 12)
+        while (players[0].isConnected() && players[1].isConnected() && players[0].getScore() < 12 && players[1].getScore() < 12)
         {
             System.out.println("New turn");
             Point targetPoint = currentPlayer.ReadMoveRequest();
@@ -158,13 +158,18 @@ public class Game
         //TODO: Отправить победителю и проигравшему соответствующие сообщения
         if(players[0].getScore() > players[1].getScore())
         {
-            players[0].SendEndGameCommand("You win! Congrats!");
-            players[1].SendEndGameCommand("Game Over");
+            players[0].SendGameOverCommand("You win! Congrats!");
+            players[1].SendGameOverCommand("You lost.");
+        }
+        else if(players[0].getScore() < players[1].getScore())
+        {
+            players[1].SendGameOverCommand("You win! Congrats!");
+            players[0].SendGameOverCommand("You lost.");
         }
         else
         {
-            players[1].SendEndGameCommand("You win! Congrats!");
-            players[0].SendEndGameCommand("Game Over");
+            players[1].SendGameOverCommand("Draw!");
+            players[0].SendGameOverCommand("Draw!");
         }
     }
 }

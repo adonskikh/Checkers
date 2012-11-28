@@ -50,6 +50,11 @@ public class FormBoard extends javax.swing.JFrame implements Observer
     {
 
         btnnewGame = new javax.swing.JButton();
+        jTextFieldLogin = new javax.swing.JTextField();
+        jPasswordFieldPassword = new javax.swing.JPasswordField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButtonDisconnect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Checkers");
@@ -74,19 +79,50 @@ public class FormBoard extends javax.swing.JFrame implements Observer
             }
         });
 
+        jLabel1.setText("Login");
+
+        jLabel2.setText("Password");
+
+        jButtonDisconnect.setText("Disconnect");
+        jButtonDisconnect.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButtonDisconnectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 547, Short.MAX_VALUE)
-                .addComponent(btnnewGame))
+                .addContainerGap(452, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnnewGame, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonDisconnect, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                    .addComponent(jPasswordFieldPassword)
+                    .addComponent(jTextFieldLogin)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPasswordFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnnewGame)
-                .addGap(0, 515, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonDisconnect)
+                .addGap(0, 434, Short.MAX_VALUE))
         );
 
         btnnewGame.getAccessibleContext().setAccessibleName("jButtonAction");
@@ -121,13 +157,25 @@ public class FormBoard extends javax.swing.JFrame implements Observer
         {
             System.exit(-1);
         }
-        game.Start();
+        game.Start(jTextFieldLogin.getText(), jPasswordFieldPassword.getText());
     }//GEN-LAST:event_btnnewGameActionPerformed
+
+    private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButtonDisconnectActionPerformed
+    {//GEN-HEADEREND:event_jButtonDisconnectActionPerformed
+        // TODO add your handling code here:
+        game.Finish();
+    }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
     @Override
     public void paint(Graphics g)
     {
-        game.Draw(g, border);
+        Image img = createImage(getSize().width, getSize().height);
+        Graphics new_gr = img.getGraphics();
+        this.paintComponents(new_gr);
+        game.Draw(new_gr, border);
+        g.drawImage(img, 0, 0, null);
+        /*this.paintComponents(g);
+        game.Draw(g, border);*/
     }
 
     /**
@@ -177,11 +225,21 @@ public class FormBoard extends javax.swing.JFrame implements Observer
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnnewGame;
+    private javax.swing.JButton jButtonDisconnect;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPasswordField jPasswordFieldPassword;
+    private javax.swing.JTextField jTextFieldLogin;
     // End of variables declaration//GEN-END:variables
 
+    @Override
     public void update(Observable subject, Object o)
     {
         //JOptionPane.showMessageDialog(null, "Notified");
         repaint();
+        if(game != null)
+        {
+            this.setTitle(game.getStatus());
+        }
     }
 }

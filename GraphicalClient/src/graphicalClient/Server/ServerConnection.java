@@ -143,18 +143,11 @@ public class ServerConnection
         return message;
     }
 
-    public void SendNewGameRequest(String login, String password)
+    public void SendNewGameRequest(String login, String password) throws IOException
     {
-        try
-        {
-            writer.writeObject(login);
-            writer.writeObject(password);
-            writer.flush();
-        }
-        catch(IOException e)
-        {
-            System.out.println("Stream writing error: " + e.getMessage());            
-        }
+        writer.writeObject(login);
+        writer.writeObject(password);
+        writer.flush();
     }
 
     public void SendMoveRequest(Point startPoint, Point finishPoint)

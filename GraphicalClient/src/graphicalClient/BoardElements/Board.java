@@ -130,10 +130,6 @@ public class Board
             squares[command.getNewX()][command.getNewY()].RemoveChecker(); 
             squares[command.getNewX()][command.getNewY()].AddChecker(temp);
         }
-        if (command.isEndOfTurn())
-        {
-            player.ChangeTurn();
-        }
     }
     
     private void SelectSquare(int x, int y)

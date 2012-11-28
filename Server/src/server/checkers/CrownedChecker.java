@@ -133,7 +133,6 @@ public final class CrownedChecker implements IChecker
     public boolean CanKillSmb()
     {
         Point tmp;
-        boolean founded = false;
         Point masSteps[] = {new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)}; 
         for (int i = 0; i < 4; i++)
         {
@@ -147,29 +146,20 @@ public final class CrownedChecker implements IChecker
                     break;
                 }
                 
-                if (founded)
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && tmp.x + masSteps[i].x < board.length  && tmp.x + masSteps[i].x >= 0 && tmp.y + masSteps[i].y < board.length  && tmp.y + masSteps[i].y >= 0) 
                 {
-                    if(board[tmp.x][tmp.y] == null)
+                    if(board[tmp.x + masSteps[i].x][tmp.y + masSteps[i].y] == null)
                     {
+                        System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + tmp.x + ", " + tmp.y + "]");
                         return true;
                     }
                     else
-                    {
-                        //Проверять в другом направлении
                         break;
-                    }
-                }
-                
-                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && !founded)
-                {
-                    founded = true;
-                }
-                
+                }                
                 tmp.x += masSteps[i].x;
                 tmp.y += masSteps[i].y;
             }
-        }
-        
+        }        
         return false;
     }
     
@@ -192,7 +182,7 @@ public final class CrownedChecker implements IChecker
                 }
                 else
                 {
-                    if(!founded)
+                    if(!founded && (tmp.x != targetPoint.x || tmp.y != targetPoint.y))
                     {
                         founded = true;
                     }

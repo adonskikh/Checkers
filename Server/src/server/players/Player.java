@@ -6,6 +6,7 @@ package server.players;
 
 import java.awt.*;
 import java.io.*;
+import java.net.Socket;
 import server.checkers.BlackChecker;
 import server.checkers.IChecker;
 import server.checkers.WhiteChecker;
@@ -19,6 +20,7 @@ public class Player
     private int id;
     private ObjectInputStream reader; 
     private ObjectOutputStream writer;
+    private Socket socket;
     private boolean connected;
     private int score;
     private Color color;
@@ -28,16 +30,13 @@ public class Player
     private int lostgamescount;
     private String name;
     
-    public Player(int id, Color color, ObjectInputStream reader, ObjectOutputStream writer)
+    public Player(int id, String name)
     {
         this.id = id;
         score = 0;
-        this.color = color;
-        this.reader = reader;
-        this.writer = writer;
         connected = true;
         current_checker = null;
-        name = "TODO: get this from database";
+        this.name = name;
     }
     
     public int getWonGamesCount()
@@ -245,17 +244,39 @@ public class Player
         }
     }
     
-    public void SendEndGameCommand(String message)
+    public void Initialize(Color color, Socket socket, ObjectInputStream in, ObjectOutputStream out)
+    {
+        reader = in;
+        writer = out;
+        this.socket = socket;
+        this.color = color;
+    }
+    
+    public void Disconnect()
     {
         try
         {
-            writer.writeObject(message);
-            writer.flush();
+            writer.close();
         }
-        catch(IOException exception)
+        catch (IOException e)
         {
-            connected = false;
-            System.out.println("Stream " + id + " writing error");
+            System.out.println("Can't close output stream: " + e.getMessage());
+        }
+        try
+        {
+            reader.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't close input stream: " + e.getMessage());
+        }
+        try
+        {
+            socket.close();
+        }
+        catch (IOException e)
+        {
+            System.out.println("Can't close socket: " + e.getMessage());
         }
     }
     

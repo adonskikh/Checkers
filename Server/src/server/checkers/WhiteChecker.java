@@ -52,6 +52,7 @@ public final class WhiteChecker extends Checker
             {
                 if (board[x - 2][y + 2] == null)
                 {
+                    System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + (x - 1) + ", " + (y + 1) + "]");
                     return true;
                 }
             }
@@ -59,17 +60,35 @@ public final class WhiteChecker extends Checker
             {
                 if (board[x + 2][y + 2] == null)
                 {
+                    System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + (x + 1) + ", " + (y + 1) + "]");
                     return true;
                 }
             }
         }
         return false;
     }
-    
+
     @Override
     public boolean IfCanTurnToQueen()
     {
         return y == board.length - 1;
+    }
+
+    @Override
+    public boolean IfThisOneKillSmb(Point targetPoint)
+    {
+        if (targetPoint.y - y != 2)
+        {
+            return false;
+        }
+
+        Point tmp = new Point((targetPoint.x + x) / 2, (targetPoint.y + y) / 2);
+        if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == Color.BLACK)
+        {
+            return true;
+        }
+
+        return false;
     }
     
 }

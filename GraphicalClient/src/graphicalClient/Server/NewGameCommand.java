@@ -12,16 +12,23 @@ import java.awt.Color;
  */
 public class NewGameCommand
 {
+
     private Color color;
-    
     private String name;
     private String opponentName;
 
     public NewGameCommand(int color, String name, String opponentName)
     {
-        this.color = color == 0 ? Color.WHITE : Color.RED;
-        this.name = name;
-        this.opponentName = opponentName;
+        if (color >= 0)
+        {
+            this.color = color == 0 ? Color.WHITE : Color.RED;
+            this.name = name;
+            this.opponentName = opponentName;
+        }
+        else
+        {
+            this.color = null;
+        }
     }
 
     /**
