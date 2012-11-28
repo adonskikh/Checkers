@@ -189,7 +189,9 @@ public class Player
             return finishPoint;
         }
         else
+        {
             return null;
+        }
     }
 
     public void SendNewGameCommand(int color, String name, String opponentName)// + currentPoint

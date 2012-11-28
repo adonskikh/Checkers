@@ -133,62 +133,6 @@ public final class CrownedChecker implements IChecker
     public boolean CanKillSmb()
     {
         Point tmp;
-        /*Point tmp;
-        boolean found = false;
->>>>>>> origin/Alina's_new_branch
-        Point masSteps[] = {new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)}; 
-        for (int i = 0; i < 4; i++)
-        {
-            tmp = new Point(getX() + masSteps[i].x, getY() + masSteps[i].y);
-            
-            while (tmp.x < board.length && tmp.y < board.length && tmp.x > -1 && tmp.y > -1)
-            {
-                //Дамка не может ходить через свои шашки
-                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == this.getColor())
-                {
-                    break;
-                }
-                
-<<<<<<< HEAD
-                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && tmp.x + masSteps[i].x < board.length  && tmp.x + masSteps[i].x >= 0 && tmp.y + masSteps[i].y < board.length  && tmp.y + masSteps[i].y >= 0) 
-                {
-                    if(board[tmp.x + masSteps[i].x][tmp.y + masSteps[i].y] == null)
-                    {
-                        System.out.println("[" + getX() + ", " + getY() + "]" + "can kill " + "[" + tmp.x + ", " + tmp.y + "]");
-                        return true;
-                    }
-                    else
-                        break;
-                }                
-                tmp.x += masSteps[i].x;
-                tmp.y += masSteps[i].y;
-            }
-        }        
-=======
-                if (found)
-                {
-                    if(board[tmp.x][tmp.y] == null)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        //Проверять в другом направлении
-                        break;
-                    }
-                }
-                
-                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && !found)
-                {
-                    found = true;
-                }
-                
-                tmp.x += masSteps[i].x;
-                tmp.y += masSteps[i].y;
-            }
-        }
-        
-        return false;*/
         Point masSteps[] = { new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)};
         for (int i = 0; i < 4; i++)
         {

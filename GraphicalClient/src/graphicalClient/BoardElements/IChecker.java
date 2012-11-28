@@ -5,8 +5,6 @@
 package graphicalClient.BoardElements;
 
 import java.awt.Color;
-import java.awt.Graphics;
-
 /**
  *
  * @author totzhe

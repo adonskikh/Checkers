@@ -11,9 +11,7 @@ package server;
 import java.awt.Color;
 import java.io.*;
 import java.net.*;
-import java.sql.Connection;
 import server.db.DataBase;
-import server.db.MD5;
 import server.players.Player;
 
 public class Server
@@ -29,7 +27,8 @@ public class Server
         System.out.println("Welcome to Server side");
         
         DataBase dbc = new DataBase();
-        Connection connection = dbc.CreateConnection();
+        //Connection connection = dbc.CreateConnection();
+        dbc.CreateConnection();
         //Connection connection = dbc.CreateConnection();
         
         /*if(connection == null)
@@ -95,7 +94,7 @@ public class Server
                 {
                     clientSocket1 = listener.accept();
                     System.out.println("Accepted");
-                    player1 = ConnectPlayer(clientSocket1, Color.WHITE);
+                    player1 = ConnectPlayer(clientSocket1, Color.WHITE, dbc);
                 }
                 catch (SocketTimeoutException e)
                 {
@@ -114,7 +113,7 @@ public class Server
                 try
                 {
                     clientSocket2 = listener.accept();
-                    player2 = ConnectPlayer(clientSocket2, Color.BLACK);
+                    player2 = ConnectPlayer(clientSocket2, Color.BLACK, dbc);
                 }
                 catch (SocketTimeoutException e)
                 {
@@ -137,10 +136,10 @@ public class Server
             thr.start();
         }
         listener.close();
-        dbc.CloseConnection(connection);
+        dbc.CloseConnection();
     }
 
-    private static Player ConnectPlayer(Socket socket, Color color)
+    private static Player ConnectPlayer(Socket socket, Color color, DataBase dbc)
     {
         ObjectInputStream in = null;
         ObjectOutputStream out = null;
@@ -180,7 +179,12 @@ public class Server
             System.out.println("IOException: " + e.getMessage());
             return null;
         }
-        Player player = new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
+        Player player = dbc.GetPlayerByLoginAndPass(login, password);
+        if(player == null)
+        {
+            System.out.println("Player is null");
+        }
+        dbc.GetPlayersInfo(player);//new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
         if (player != null)
         {
             player.Initialize(color, socket, in, out);

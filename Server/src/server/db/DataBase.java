@@ -4,7 +4,6 @@
  */
 package server.db;
 
-import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Properties;
 import server.players.Player;
@@ -20,7 +19,9 @@ public final class DataBase
         //Class.forName("com.mysql.jdbc.Driver");
     }
     
-    public Connection CreateConnection()
+    private Connection connection;
+    
+    public void CreateConnection()
     {
         try 
         {
@@ -30,20 +31,16 @@ public final class DataBase
             connInfo.put("password", "checkers");
             
             
-            Connection connection = DriverManager.getConnection("jdbc:mysql://vragov.com:3306/checkers", connInfo);
-            
-            return connection;
+            connection = DriverManager.getConnection("jdbc:mysql://vragov.com:3306/checkers", connInfo);
         }
         catch(SQLException e)
         {
             System.err.println("Cannot connect to this db.");
             System.err.println(e.getStackTrace().toString());
         }
-        
-        return null;
     }
     
-    public void CloseConnection(Connection connection)
+    public void CloseConnection()
     {
         try
         {
@@ -58,7 +55,7 @@ public final class DataBase
         }
     }
     
-    public int IsPlayerLikeThisInDB(Connection connection, String name, String password)
+    public int IsPlayerLikeThisInDB(String name, String password)
     {
         try
         {
@@ -82,7 +79,7 @@ public final class DataBase
         return -1;
     }
     
-    public void GetPlayersInfo(Connection connection, Player player)
+    public void GetPlayersInfo(Player player)
     {
         try
         {
@@ -102,7 +99,7 @@ public final class DataBase
         }
     }
     
-    public void UpdatePlayerInfo(Connection connection, Player player)
+    public void UpdatePlayerInfo(Player player)
     {
         try
         {
@@ -117,5 +114,32 @@ public final class DataBase
         {
             System.err.println("UpdatePlayersInfo");
         }
+    }
+    
+    public Player GetPlayerByLoginAndPass(String login, String password)
+    {
+        try
+        {
+            MD5 md5 = new MD5();
+            String pass = md5.getHash(password);
+            PreparedStatement statement = connection.prepareStatement("SELECT id FROM PLAYER WHERE name = ? and password = ?");
+            statement.setString(1, login);
+            statement.setString(2, pass);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next())
+            {
+                return new Player(resultSet.getInt("id"), login) ;
+            }
+            System.out.println("Not resul in DB");
+            statement.close();
+            
+            return null;
+        }
+        catch (SQLException exception)
+        {
+            System.err.println("GetPlayerByLoginAndPass");
+        }
+        
+        return null;
     }
 }
