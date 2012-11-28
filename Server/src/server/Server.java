@@ -180,10 +180,6 @@ public class Server
             return null;
         }
         Player player = dbc.GetPlayerByLoginAndPass(login, password);
-        if(player == null)
-        {
-            System.out.println("Player is null");
-        }
         //new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
         if (player != null)
         {
