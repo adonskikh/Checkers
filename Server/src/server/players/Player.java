@@ -46,7 +46,7 @@ public class Player
     
     public void setWonGamesCount(int count)
     {
-        lostgamescount = count;
+        wongamescount = count;
     }
     
     public int getLostGamesCount()
@@ -56,7 +56,7 @@ public class Player
     
     public void setLostGamesCount(int count)
     {
-        wongamescount = count;
+        lostgamescount = count;
     }
     
     public int getID()
@@ -142,7 +142,7 @@ public class Player
     }
     
     //Проверка является ли шашка, шашкой игрока (по цвету)
-    public boolean IsMineChecker(Point checker_coord)
+    private boolean IsMineChecker(Point checker_coord)
     {
         if(board[checker_coord.x][checker_coord.y] != null && board[checker_coord.x][checker_coord.y].getColor() == color)
         {
@@ -183,7 +183,7 @@ public class Player
             connected = false;
             return null;
         }
-        if(startPoint != null && finishPoint != null)
+        if(startPoint != null && finishPoint != null && IsMineChecker(startPoint))
         {
             current_checker = board[startPoint.x][startPoint.y];
             return finishPoint;

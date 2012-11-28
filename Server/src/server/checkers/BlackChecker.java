@@ -66,7 +66,7 @@ public final class BlackChecker extends Checker
         }
         return false;
     }
-
+    
     @Override
     public boolean IfCanTurnToQueen()
     {

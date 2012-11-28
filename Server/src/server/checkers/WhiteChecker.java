@@ -12,36 +12,37 @@ import java.awt.*;
  */
 public final class WhiteChecker extends Checker
 {
+
     public WhiteChecker(Color color, int x, int y, IChecker[][] masChecker)
     {
         super(color, x, y, masChecker);
     }
-    
+
     //Может ли шашка сделать данных ход
     @Override
     public boolean CheckMotion(Point targetPoint)
     {
-        if(targetPoint.y <= y)
+        if (targetPoint.y <= y)
         {
             return false;
         }
-        
+
         int dX = Math.abs(targetPoint.x - x), dY = targetPoint.y - y;
-       
-        if (dX == 2 && dY == 2 && 
-                board[(targetPoint.x + x)/2][(targetPoint.y + y)/2] != null && 
-                board[(targetPoint.x + x)/2][(targetPoint.y + y)/2].getColor() != Color.BLACK) 
-        {
-            return true;
-        }       
-        if (dX == 1 && dY == 1) 
+
+        if (dX == 2 && dY == 2
+                && board[(targetPoint.x + x) / 2][(targetPoint.y + y) / 2] != null
+                && board[(targetPoint.x + x) / 2][(targetPoint.y + y) / 2].getColor() != Color.BLACK)
         {
             return true;
         }
-        
+        if (dX == 1 && dY == 1)
+        {
+            return true;
+        }
+
         return false;
     }
-    
+
     //Проверяет, может ли шашка убить вражескую
     @Override
     public boolean CanKillSmb()
@@ -90,5 +91,4 @@ public final class WhiteChecker extends Checker
 
         return false;
     }
-    
 }

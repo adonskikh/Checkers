@@ -133,6 +133,9 @@ public final class CrownedChecker implements IChecker
     public boolean CanKillSmb()
     {
         Point tmp;
+        /*Point tmp;
+        boolean found = false;
+>>>>>>> origin/Alina's_new_branch
         Point masSteps[] = {new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)}; 
         for (int i = 0; i < 4; i++)
         {
@@ -146,6 +149,7 @@ public final class CrownedChecker implements IChecker
                     break;
                 }
                 
+<<<<<<< HEAD
                 if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && tmp.x + masSteps[i].x < board.length  && tmp.x + masSteps[i].x >= 0 && tmp.y + masSteps[i].y < board.length  && tmp.y + masSteps[i].y >= 0) 
                 {
                     if(board[tmp.x + masSteps[i].x][tmp.y + masSteps[i].y] == null)
@@ -160,31 +164,84 @@ public final class CrownedChecker implements IChecker
                 tmp.y += masSteps[i].y;
             }
         }        
+=======
+                if (found)
+                {
+                    if(board[tmp.x][tmp.y] == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        //Проверять в другом направлении
+                        break;
+                    }
+                }
+                
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && !found)
+                {
+                    found = true;
+                }
+                
+                tmp.x += masSteps[i].x;
+                tmp.y += masSteps[i].y;
+            }
+        }
+        
+        return false;*/
+        Point masSteps[] = { new Point(1, 1), new Point(-1, -1), new Point(1, -1), new Point(-1, 1)};
+        for (int i = 0; i < 4; i++)
+        {
+            tmp = new Point(getX() + masSteps[i].x, getY() + masSteps[i].y);
+
+            while (tmp.x < board.length && tmp.y < board.length && tmp.x > -1 && tmp.y > -1)
+            {
+                //Дамка не может ходить через свои шашки
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() == this.getColor())
+                {
+                    break;
+                }
+
+                if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != this.getColor() && tmp.x + masSteps[i].x < board.length && tmp.x + masSteps[i].x >= 0 && tmp.y + masSteps[i].y < board.length && tmp.y + masSteps[i].y >= 0)
+                {
+                    if (board[tmp.x + masSteps[i].x][tmp.y + masSteps[i].x] == null)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                tmp.x += masSteps[i].x;
+                tmp.y += masSteps[i].y;
+            }
+        }
         return false;
     }
-    
+
     @Override
     public boolean IfThisOneKillSmb(Point targetPoint)
     {
         int stepX = getX() < targetPoint.x ? 1 : -1;
         int stepY = getY() < targetPoint.y ? 1 : -1;
-        
-        Point tmp = new Point(getX()+stepX, getY()+stepY);
-        boolean founded = false;
-        
-        while(tmp.x != targetPoint.x && tmp.y != targetPoint.y)
+
+        Point tmp = new Point(getX() + stepX, getY() + stepY);
+        boolean found = false;
+
+        while (tmp.x != targetPoint.x && tmp.y != targetPoint.y)
         {
-            if(board[tmp.x][tmp.y] != null)
+            if (board[tmp.x][tmp.y] != null)
             {
-                if(board[tmp.x][tmp.y].getColor() == this.getColor())
+                if (board[tmp.x][tmp.y].getColor() == this.getColor())
                 {
                     return false;
                 }
                 else
                 {
-                    if(!founded && (tmp.x != targetPoint.x || tmp.y != targetPoint.y))
+                    if (!found && (tmp.x != targetPoint.x || tmp.y != targetPoint.y))
                     {
-                        founded = true;
+                        found = true;
                     }
                     else
                     {
@@ -195,8 +252,8 @@ public final class CrownedChecker implements IChecker
             tmp.x += stepX;
             tmp.y += stepY;
         }
-        
-        if(founded)
+
+        if (found)
         {
             return true;
         }
@@ -205,7 +262,7 @@ public final class CrownedChecker implements IChecker
             return false;
         }
     }
-    
+
     @Override
     public Point ChangeCoords(Point targetPoint)
     {
@@ -213,10 +270,10 @@ public final class CrownedChecker implements IChecker
         setX(targetPoint.x);
         setY(targetPoint.y);
         board[getX()][getY()] = this;
-        
+
         return new Point(getX(), getY());
     }
-    
+
     @Override
     public boolean IfCanTurnToQueen()
     {

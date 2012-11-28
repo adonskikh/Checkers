@@ -83,18 +83,7 @@ public abstract  class Checker implements IChecker
      * @return true/false
      */
     @Override
-    public boolean IfThisOneKillSmb(Point targetPoint)
-    {
-        if(Math.abs(targetPoint.y - y) == 2)
-        {
-            Point tmp = new Point((targetPoint.x + x)/2, (targetPoint.y + y)/2);
-            if (board[tmp.x][tmp.y] != null && board[tmp.x][tmp.y].getColor() != color)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    public abstract boolean IfThisOneKillSmb(Point targetPoint);
     
     @Override
     public Point ChangeCoords(Point targetPoint)

@@ -28,10 +28,11 @@ public class Server
     {
         System.out.println("Welcome to Server side");
         
-        /*DataBase dbc = new DataBase();
+        DataBase dbc = new DataBase();
         Connection connection = dbc.CreateConnection();
+        //Connection connection = dbc.CreateConnection();
         
-        if(connection == null)
+        /*if(connection == null)
         {
             System.out.println("Connection with DB is null");
         }
@@ -40,12 +41,25 @@ public class Server
         String password = md5.getHash("gamer");
         System.out.println(password);
         
-        /*if (dbc.IsPlayerLikeThisInDB(connection, "gamer", password))
-        {
-            System.out.println("gamer in DB");
-        }*/
+        int id = -1;
         
-        //dbc.CloseConnection(connection);*/
+        if((id = dbc.IsPlayerLikeThisInDB(connection, "gamer", password)) != -1)
+        {
+            System.out.println("gamer in DB id = " + id);
+        }
+        
+        
+        Player pl = new Player(id, Color.WHITE, null, null);
+        
+        dbc.GetPlayersInfo(connection, pl);
+        System.out.println("gamer won_count = " + pl.getWonGamesCount());
+        System.out.println("gamer lost_count = " + pl.getLostGamesCount());
+        //dbc.CloseConnection(connection);
+        
+        pl.setWonGamesCount(1);
+        pl.setLostGamesCount(3);
+        
+        dbc.UpdatePlayerInfo(connection, pl);*/
 
         ServerSocket listener = null;
         Socket clientSocket1 = null;
@@ -63,6 +77,11 @@ public class Server
         listener.setSoTimeout(10000);
 
         boolean working = true;
+        /*ObjectInputStream in1 = null;
+        ObjectInputStream in2 = null;
+        Player player1;
+        Player player2;
+        int id1 = -1, id2 = -1;*/
         while (working)
         {
             Player player1 = null;
@@ -118,8 +137,9 @@ public class Server
             thr.start();
         }
         listener.close();
+        dbc.CloseConnection(connection);
     }
-    
+
     private static Player ConnectPlayer(Socket socket, Color color)
     {
         ObjectInputStream in = null;

@@ -62,11 +62,12 @@ public final class DataBase
     {
         try
         {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT id FROM PLAYER WHERE name = '"+ name + "' and password = '" + password +"';");
+            PreparedStatement statement = connection.prepareStatement("SELECT id FROM PLAYER WHERE name = ? and password = ?");
+            statement.setString(1, name);
+            statement.setString(2, password);
+            ResultSet resultSet = statement.executeQuery();
             if(resultSet.next())
             {
-                //int id = resultSet.getInt("id");
                 return resultSet.getInt("id");
             }
             statement.close();
@@ -85,8 +86,9 @@ public final class DataBase
     {
         try
         {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT won_games_count FROM PLAYER WHERE id = '"+ player.getID() + "';");
+            PreparedStatement statement = connection.prepareStatement("SELECT won_games_count, lost_games_count FROM PLAYER WHERE id = ?");
+            statement.setInt(1, player.getID());
+            ResultSet resultSet = statement.executeQuery();
             if(resultSet.next())
             {
                 player.setWonGamesCount(resultSet.getInt("won_games_count"));
