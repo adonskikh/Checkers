@@ -10,6 +10,7 @@ import java.net.Socket;
 import server.checkers.BlackChecker;
 import server.checkers.IChecker;
 import server.checkers.WhiteChecker;
+import server.db.DataBase;
 
 /**
  *
@@ -29,6 +30,7 @@ public class Player
     private int wongamescount;
     private int lostgamescount;
     private String name;
+    private DataBase dataBase;
     
     public Player(int id, String name)
     {
@@ -246,16 +248,18 @@ public class Player
         }
     }
     
-    public void Initialize(Color color, Socket socket, ObjectInputStream in, ObjectOutputStream out)
+    public void Initialize(Color color, Socket socket, ObjectInputStream in, ObjectOutputStream out, DataBase dbc)
     {
         reader = in;
         writer = out;
         this.socket = socket;
         this.color = color;
+        dataBase = dbc;
     }
     
     public void Disconnect()
     {
+        dataBase.UpdatePlayerInfo(this);
         try
         {
             writer.close();

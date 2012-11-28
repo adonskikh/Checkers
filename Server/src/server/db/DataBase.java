@@ -27,11 +27,11 @@ public final class DataBase
         {
             Properties connInfo = new Properties();
             connInfo.put("characterEncoding", "UTF8");
-            connInfo.put("user", "checkers");
-            connInfo.put("password", "checkers");
+            connInfo.put("user", "root");
+            connInfo.put("password", "");
             
             
-            connection = DriverManager.getConnection("jdbc:mysql://vragov.com:3306/checkers", connInfo);
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/checkers", connInfo);
         }
         catch(SQLException e)
         {
@@ -122,6 +122,10 @@ public final class DataBase
         {
             MD5 md5 = new MD5();
             String pass = md5.getHash(password);
+            if(connection == null)
+            {
+                System.out.println("Connection is null");
+            }
             PreparedStatement statement = connection.prepareStatement("SELECT id FROM PLAYER WHERE name = ? and password = ?");
             statement.setString(1, login);
             statement.setString(2, pass);

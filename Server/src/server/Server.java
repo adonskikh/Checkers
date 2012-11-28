@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.io.*;
 import java.net.*;
 import server.db.DataBase;
+import server.db.MD5;
 import server.players.Player;
 
 public class Server
@@ -37,7 +38,7 @@ public class Server
         }
         //connection
         MD5 md5 = new MD5();
-        String password = md5.getHash("gamer");
+        String password = md5.getHash("something");
         System.out.println(password);
         
         int id = -1;
@@ -136,7 +137,6 @@ public class Server
             thr.start();
         }
         listener.close();
-        dbc.CloseConnection();
     }
 
     private static Player ConnectPlayer(Socket socket, Color color, DataBase dbc)
@@ -180,11 +180,12 @@ public class Server
             return null;
         }
         Player player = dbc.GetPlayerByLoginAndPass(login, password);
+        //Player player = new Player(0, login);
         //new Player(0, login);//TODO: Получить игрока с инициализированными именем и ID из БД
         if (player != null)
         {
             dbc.GetPlayersInfo(player);
-            player.Initialize(color, socket, in, out);
+            player.Initialize(color, socket, in, out, dbc);
         }
         return player;
     }

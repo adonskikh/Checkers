@@ -158,11 +158,15 @@ public class Game
         //TODO: Отправить победителю и проигравшему соответствующие сообщения
         if(players[0].getScore() > players[1].getScore())
         {
+            players[0].setWonGamesCount(players[0].getWonGamesCount() + 1);
+            players[1].setLostGamesCount(players[1].getLostGamesCount() + 1);
             players[0].SendGameOverCommand("You win! Congrats!");
             players[1].SendGameOverCommand("You lost.");
         }
         else if(players[0].getScore() < players[1].getScore())
         {
+            players[1].setWonGamesCount(players[0].getWonGamesCount() + 1);
+            players[0].setLostGamesCount(players[1].getLostGamesCount() + 1);
             players[1].SendGameOverCommand("You win! Congrats!");
             players[0].SendGameOverCommand("You lost.");
         }
